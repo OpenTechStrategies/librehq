@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cbf8e638e8cd1a98e1008cd9f9ead22772a784d607fbc4e41b89de5b19011179"
+            "sha256": "2fa3d20cbe8b02381624555b4ad6b898435428af6a6e6d9f1b667533bd69e36a"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -71,5 +71,10 @@
             "version": "==0.14.1"
         }
     },
-    "develop": {}
+    "develop": {
+        "c251336": {
+            "editable": true,
+            "path": "./wikis/"
+        }
+    }
 }
