@@ -1,0 +1,3 @@
+[submodule "librehq-wikis"]
+	path = wikis
+	url = https://github.com/OpenTechStrategies/librehq-wikis

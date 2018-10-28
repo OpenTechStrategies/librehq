@@ -20,6 +20,14 @@ full list)
 $ pipenv install
 ```
 
+### Sub modules
+
+Each section of librehq is setup as its own project, which should be bootable
+independently for development and testing, which is then added as a submodule
+to this project.  Currently added are:
+
+* librehq-wikis as wikis: a wiki hosting and generation tool
+
 ## Booting the appliaction
 
 Start the application by running flask from the project directory:
