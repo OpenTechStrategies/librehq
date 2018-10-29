@@ -67,7 +67,7 @@
         "csv2wiki": {
             "editable": true,
             "git": "https://github.com/OpenTechStrategies/csv2wiki",
-            "ref": "d21baded965fddbe5bb9ed3d804bde0764a6fe17"
+            "ref": "module-ize"
         },
         "flask": {
             "hashes": [

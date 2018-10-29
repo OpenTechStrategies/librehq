@@ -1,7 +1,14 @@
-from flask import Blueprint
+from flask import (
+    Blueprint, render_template
+)
+
+import wikis
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('')
 def index():
-    return 'This is a stub'
+    modules = [
+        wikis.main_partial()
+    ]
+    return render_template("index.html", modules=modules)
