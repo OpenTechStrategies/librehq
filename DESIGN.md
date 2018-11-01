@@ -18,6 +18,9 @@ cross that bridge when we come to it.)
 
 ## Individuals and Organizations
 
+_(Note: the "individual" part of this will be implemented first, and
+the "organization" part will come later.)_
+
 Some users are individuals and some are organizations.  The two kinds
 live in the same namespace (e.g., in URLs, they occupy the same
 positions).  An organization user has a set of individual users as its
@@ -25,8 +28,8 @@ owners.  You can't log in as an organization; instead, to change
 something about an organization, you would log in as a user who is an
 owner of (or some level of admin for) that organization.
 
-Note: There are other online services that work this way; we should
-look at a few and compare, to make sure we're doing it right.
+_(Note: There are other online services that work this way; we should
+look at a few and compare, to make sure we're doing it right.)_
 
 An individual can transfer assets (such as a wiki) to an organization,
 and a forwarding pointer will optionally be left behind.  If she is
@@ -36,16 +39,34 @@ to approve the transfer.
 ## Services and URLs
 
 To create an account, start at `https://librehq.com/`.  Afterwards
-you'll have a landing page at `https://USER.librehq.com/` that lists
+you'll have a landing page at `https://librehq.com/USER` that lists
 all the services available and which ones are active (remember, in the
 long run USER might be an organization rather than an individual).
 
 Each active service has a subzone within that user's zone.  For
 example, these are three distinct wikis:
 
-* `https://wiki.USER-1.librehq.com/WIKINAME_1`
-* `https://wiki.USER-1.librehq.com/WIKINAME_2`
-* `https://wiki.USER-2.librehq.com/WIKINAME_1`
+* `https://librehq.com/USER_1/wiki/WIKINAME_1`
+* `https://librehq.com/USER_1/wiki/WIKINAME_2`
+* `https://librehq.com/USER_2/wiki/WIKINAME_1`
+
+As a general rule, every component of a URL should be meaningful,
+human-readable, and (when it's under our control) short.  We can't do
+anything about the "https://" part, but we can try to adhere to this
+principle everywhere else.
+
+_Question: Does the above URL and path scheme affect our ability to
+shard load across servers?  I'm presuming not, since many sites work
+this way._
+
+Internally, we use a random token as the user's single, unique
+cross-service account identifier.  We don't use any of the
+externally-visible tokens (such as the username) for this; that way if
+someone wants to change their username, we have the option to allow
+it.  We'd have to decide what our policy is on that -- e.g., do we
+forward from the old username for up to some predetermined amount of
+time -- but at least we can set things up so that this is a policy
+decision rather than a technical constraint.
 
 ## Modules
 
