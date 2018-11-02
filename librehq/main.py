@@ -3,11 +3,16 @@ from flask import (
 )
 
 import wikis
+from librehq import account
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('')
 def index():
+    return account.signup()
+
+@bp.route('/dashboard')
+def dashboard():
     modules = [
         wikis.main_partial()
     ]
