@@ -49,6 +49,18 @@ Run flask-migrate migrations
 FLASK_APP=librehq pipenv run flask db upgrade
 ```
 
+## Starting a mock mail server
+
+LibreHQ sends out email to port 1025 for certain actions, which can be listened to
+using a standalone python invocation:
+
+```ShellSession
+$ python -m smtpd -n -c DebuggingServer localhost:1025
+```
+
+This is required in order to use certain parts of the site, and not having it
+running may result in errors.
+
 ## Booting the appliaction
 
 Start the application by running flask from the project directory:

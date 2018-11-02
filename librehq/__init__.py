@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_mail import Mail
 
 app = Flask(__name__)
 
@@ -8,6 +9,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://librehq@localhost/librehq_
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+app.config["MAIL_PORT"] = 1025
+mail = Mail(app)
 
 from librehq import main
 from librehq import account
