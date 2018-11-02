@@ -28,6 +28,27 @@ to this project.  Currently added are:
 
 * librehq-wikis as wikis: a wiki hosting and generation tool
 
+## Configuring the database
+
+LibreHQ uses [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/),
+[SQLAlchemy](https://www.sqlalchemy.org/), and
+[Alembic](https://alembic.zzzcomputing.com/en/latest/)  to manage migrations
+and the database.  Mostly this is done by just updating the model and running
+`FLASK_APP=librehq pipenv run flask db migrate` to create the revisions.
+
+Create a user and database for the application.  For now, the user/password
+is harcoded in the application, and so needs to match the following:
+
+```ShellSession
+$ sudo -u postgres createuser librehq
+$ sudo -u postgres createdb --owner=librehq librehq_core
+```
+
+Run flask-migrate migrations
+```ShellSession
+FLASK_APP=librehq pipenv run flask db upgrade
+```
+
 ## Booting the appliaction
 
 Start the application by running flask from the project directory:

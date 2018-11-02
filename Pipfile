@@ -10,6 +10,7 @@ name = "pypi"
 flask = "*"
 "csv2wiki" = {git = "https://github.com/OpenTechStrategies/csv2wiki", editable = true, ref = "module-ize"}
 flask-migrate = "*"
+"psycopg2" = "*"
 
 
 [requires]
