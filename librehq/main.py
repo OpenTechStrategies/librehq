@@ -9,7 +9,7 @@ bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('')
 def index():
-    return account.signup()
+    return account.signin()
 
 @bp.route('/dashboard')
 def dashboard():

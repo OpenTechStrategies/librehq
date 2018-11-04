@@ -8,26 +8,26 @@ import random
 
 bp = Blueprint('account', __name__, url_prefix='/')
 
-@bp.route('/signup', methods=(["POST", "GET"]))
-def signup():
-    if request.method == "POST":
-        new_account = Account(username=request.form["username"],
-                              #TODO: Stored as plain text!  Change before launch!
-                              #See model definition as to logic
-                              password=request.form["password"],
-                              email=request.form["email"])
-        db.session.add(new_account)
-        db.session.commit()
+def signin():
+    return render_template("signin.html")
 
-        msg = Message("Validate",
-                      sender="bot@librehq.com",
-                      recipients=[request.form["email"]])
-        msg.body = ("Please validate: " +
-                url_for("account.activate", token=generate_token(new_account), _external=True))
-        mail.send(msg)
-        return "See email for validation link"
-    else:
-        return render_template("signup.html")
+@bp.route('/signup', methods=(["POST"]))
+def signup():
+    new_account = Account(username=request.form["username"],
+                          #TODO: Stored as plain text!  Change before launch!
+                          #See model definition as to logic
+                          password=request.form["password"],
+                          email=request.form["email"])
+    db.session.add(new_account)
+    db.session.commit()
+
+    msg = Message("Validate",
+                  sender="bot@librehq.com",
+                  recipients=[request.form["email"]])
+    msg.body = ("Please validate: " +
+            url_for("account.activate", token=generate_token(new_account), _external=True))
+    mail.send(msg)
+    return "See email for validation link"
 
 @bp.route('/activate')
 def activate():
