@@ -11,6 +11,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 app.config["MAIL_PORT"] = 1025
+app.config["SECRET_KEY"] = "dev"
+app.config["SECURITY_PASSWORD_SALT"] = "salt"
 mail = Mail(app)
 
 from librehq import main

@@ -1,8 +1,9 @@
 from flask import (
-    Blueprint, render_template, request
+    Blueprint, render_template, request, url_for
 )
 from flask_mail import Message
-from librehq import db, mail
+from itsdangerous import URLSafeTimedSerializer
+from librehq import db, mail, app
 import random
 
 bp = Blueprint('account', __name__, url_prefix='/')
@@ -21,11 +22,32 @@ def signup():
         msg = Message("Validate",
                       sender="bot@librehq.com",
                       recipients=[request.form["email"]])
-        msg.body = "Please validate:"
+        msg.body = ("Please validate: " +
+                url_for("account.activate", token=generate_token(new_account), _external=True))
         mail.send(msg)
         return "See email for validation link"
     else:
         return render_template("signup.html")
+
+@bp.route('/activate')
+def activate(token):
+    pass
+
+def generate_token(account):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(account.email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'],
+            max_age=expiration
+        )
+    except:
+        return False
+    return email
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
