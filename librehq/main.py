@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template
+    Blueprint, redirect, render_template, session
 )
 
 import wikis
@@ -9,11 +9,15 @@ bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('')
 def index():
-    return account.signin()
+    if session.get("account_id") is None:
+        return render_template("signin.html")
+    else:
+        return redirect("/dashboard")
 
 @bp.route('/dashboard')
+@account.signin_required
 def dashboard():
     modules = [
         wikis.main_partial()
     ]
-    return render_template("index.html", modules=modules)
+    return render_template("dashboard.html", modules=modules)

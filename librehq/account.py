@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, url_for
+    Blueprint, render_template, redirect, request, session, url_for
 )
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
@@ -29,6 +29,18 @@ def signup():
     mail.send(msg)
     return "See email for validation link"
 
+@bp.route('/signin', methods=(["POST"]))
+def signin():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    account = Account.query.filter_by(username=username,
+        password=password,
+        validated=True).first()
+    if account is not None:
+        session['account_id'] = account.id
+    return(redirect("/"))
+
 @bp.route('/activate')
 def activate():
     email = confirm_token(request.args.get('token'), 3600)
@@ -56,6 +68,15 @@ def confirm_token(token, expiration=3600):
     except:
         return False
     return email
+
+def signin_required(view):
+    def wrapped_view(**kwargs):
+        if session.get("account_id") is None:
+            return redirect("/")
+        else:
+            return view(**kwargs)
+
+    return wrapped_view
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
