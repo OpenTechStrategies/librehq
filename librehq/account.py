@@ -30,8 +30,16 @@ def signup():
         return render_template("signup.html")
 
 @bp.route('/activate')
-def activate(token):
-    pass
+def activate():
+    email = confirm_token(request.args.get('token'), 3600)
+    if email:
+        account = Account.query.filter_by(email=email).first_or_404()
+        account.validated = True
+        db.session.add(account)
+        db.session.commit()
+        return "Confirmed!"
+    else:
+        return "Unable to confirm!"
 
 def generate_token(account):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
