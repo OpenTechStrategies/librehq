@@ -3,6 +3,7 @@ from flask import (
 )
 from flask_mail import Message
 from librehq import db, mail
+import random
 
 bp = Blueprint('account', __name__, url_prefix='/')
 
@@ -41,3 +42,4 @@ class Account(db.Model):
     # while prototyping, the user experience matches the end goal.
     password = db.Column(db.String(128))
     email = db.Column(db.String(128))
+    validated = db.Column(db.Boolean, default=False)
