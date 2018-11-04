@@ -41,6 +41,11 @@ def signin():
         session['account_id'] = account.id
     return(redirect("/"))
 
+@bp.route('/signout')
+def signout():
+    session.clear()
+    return(redirect("/"))
+
 @bp.route('/activate')
 def activate():
     email = confirm_token(request.args.get('token'), 3600)
