@@ -2,4 +2,10 @@
 # running on localhost.
 
 # SQLALCHEMY_DATABASE_URI='postgresql://<user>:<pass>@<host>/librehq_core'
+# SQLALCHEMY_BINDS = {
+#     "wikis": 'postgresql://<wikis_user>:<wikis_pass>@<wikis_host>/librehq_wikis'
+# }
 SQLALCHEMY_DATABASE_URI='postgresql://librehq@localhost/librehq_core'
+SQLALCHEMY_BINDS = {
+    "wikis": 'postgresql://librehq@localhost/librehq_wikis'
+}

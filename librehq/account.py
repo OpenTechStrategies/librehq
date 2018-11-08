@@ -39,6 +39,8 @@ def signin():
         validated=True).first()
     if account is not None:
         session['account_id'] = account.id
+        session['account_username'] = account.username
+        session['account_password'] = account.password
     return(redirect("/"))
 
 @bp.route('/signout')
