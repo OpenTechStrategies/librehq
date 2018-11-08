@@ -5,7 +5,19 @@ from flask_mail import Mail
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://librehq@localhost/librehq_core';
+try:
+    app.config.from_object('config')
+except:
+    pass
+
+try:
+    app.config.from_envvar('LIBREHQ_CONFIG')
+except:
+    pass
+
+if app.config.get('SQLALCHEMY_DATABASE_URI') is None:
+    raise RuntimeError("It looks like the database configuration isn't setup, " +
+        "see README for config.py instructions");
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

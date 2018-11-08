@@ -28,6 +28,30 @@ to this project.  Currently added are:
 
 * librehq-wikis as wikis: a wiki hosting and generation tool
 
+## Setting up the apps configuration
+
+The application will try to load the configuration from config.py in the core
+directory, and then after from a file noted by `LIBREHQ_CONFIG`.  This means that
+you can use a default config in the main directory and override if you choose.
+
+A `config.py.tmpl` has been provided with all the variables that the application
+needs to run.
+
+### Using config.py
+
+You can copy the `config.py.tmpl` to `config.py` and update it with your system's
+configuration, such as database information.
+
+### Using the LIBREHQ_CONFIG environment variable
+
+Alternately, you can place a file to be loaded up somewhere and refer to it
+by the absolute path.  When starting up, you'll modify the flask commands as
+follows:
+
+```ShellSession
+$ FLASK_APP=librehq LIBREHQ_CONFIG=/path/to/myconfig.py pipenv run flask run
+```
+
 ## Configuring the database
 
 LibreHQ uses [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/),
