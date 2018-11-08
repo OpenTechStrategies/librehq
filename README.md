@@ -18,6 +18,11 @@ full list)
 
 ```
 $ pipenv install
+
+# Initialize pipenv for submodules, which is needed for database migrations later.
+$ for submodule in wikis ; do
+  (cd $submodule ; pipenv install)
+done
 ```
 
 ### Sub modules
@@ -66,12 +71,30 @@ is harcoded in the application, and so needs to match the following:
 ```ShellSession
 $ sudo -u postgres createuser librehq
 $ sudo -u postgres createdb --owner=librehq librehq_core
+$ sudo -u postgres createdb --owner=librehq librehq_wikis # For wikis submodule
 ```
 
 Run flask-migrate migrations
 ```ShellSession
 FLASK_APP=librehq pipenv run flask db upgrade
 ```
+
+Then run migrate for each of the submodules.  The reason we do it this way is
+so that each submodule can handle their own database setup, and leave core to
+be nothing more than a submodule collector.  Each submodule also needs its own
+config.py that has the default database matching the submodule database (they
+should each have a .tmpl to use)
+
+```ShellSession
+for submodule in wikis ; do
+  (cd $submodule ; FLASK_APP=$submodule pipenv run flask db upgrade)
+done
+```
+
+**NOTE:** If you want to use `flask db migrate`, you need to disable importing
+of the submodules or else you'll get automatic generate of revisions for those
+submodules.  If this becomes a hassle, then in the future some kind of top level
+swtich should be used.
 
 ## Starting a mock mail server
 
