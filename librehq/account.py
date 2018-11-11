@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, redirect, request, session, url_for
+    Blueprint, flash, render_template, redirect, request, session, url_for
 )
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
@@ -107,6 +107,9 @@ def updateAccount():
         emailUpdated = True
         account.email = request.form["email"]
         account.validated = False
+
+    if not account.username == request.form["username"]:
+        flash("Changing username isn't supported at this time")
 
     db.session.add(account)
     db.session.commit()
