@@ -5,7 +5,14 @@
 <form action="updateAccount" method="post">
   <h2>Change Password</h2>
   <input type="password" name="password">
+
   <hr>
+
+  <h2>Change Email Address</h2>
+  <input name="email" value="{{ account.email }}">
+
+  <hr>
+
   <input type="submit" value="Update Account">
 </form>
 {% endblock %}

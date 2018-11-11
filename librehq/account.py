@@ -11,6 +11,14 @@ bp = Blueprint('account', __name__, url_prefix='/')
 def signin():
     return render_template("signin.html")
 
+def sendValidationEmail(account):
+    msg = Message("Validate",
+                  sender="bot@librehq.com",
+                  recipients=[request.form["email"]])
+    msg.body = ("Please validate: " +
+            url_for("account.activate", token=generate_token(account), _external=True))
+    mail.send(msg)
+
 @bp.route('/signup', methods=(["POST"]))
 def signup():
     new_account = Account(username=request.form["username"],
@@ -21,12 +29,8 @@ def signup():
     db.session.add(new_account)
     db.session.commit()
 
-    msg = Message("Validate",
-                  sender="bot@librehq.com",
-                  recipients=[request.form["email"]])
-    msg.body = ("Please validate: " +
-            url_for("account.activate", token=generate_token(new_account), _external=True))
-    mail.send(msg)
+    sendValidationEmail(new_account)
+
     return "See email for validation link"
 
 @bp.route('/signin', methods=(["POST"]))
@@ -98,9 +102,21 @@ def account():
 def updateAccount():
     account = Account.query.get(session.get("account_id"))
     account.password = request.form["password"]
+
+    if not account.email == request.form["email"]:
+        emailUpdated = True
+        account.email = request.form["email"]
+        account.validated = False
+
     db.session.add(account)
     db.session.commit()
-    return redirect(url_for(".account"))
+
+    if not account.validated:
+        sendValidationEmail(account)
+        signout()
+        return "See email for validation link"
+    else:
+        return redirect(url_for(".account"))
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
