@@ -93,6 +93,15 @@ def account():
     account = Account.query.get(session.get("account_id"))
     return render_template("account.html", account=account)
 
+@bp.route("/updateAccount", methods=(["POST"]))
+@signin_required
+def updateAccount():
+    account = Account.query.get(session.get("account_id"))
+    account.password = request.form["password"]
+    db.session.add(account)
+    db.session.commit()
+    return redirect(url_for(".account"))
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))

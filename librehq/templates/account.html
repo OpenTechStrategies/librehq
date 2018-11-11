@@ -1,4 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Account page for {{ account.username }}</h1>
+
+<form action="updateAccount" method="post">
+  <h2>Change Password</h2>
+  <input type="password" name="password">
+  <hr>
+  <input type="submit" value="Update Account">
+</form>
 {% endblock %}
