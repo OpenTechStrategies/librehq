@@ -83,6 +83,8 @@ def signin_required(view):
         else:
             return view(**kwargs)
 
+    wrapped_view.__name__ = view.__name__
+
     return wrapped_view
 
 @bp.route('/account')
