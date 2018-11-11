@@ -44,3 +44,11 @@
 
 1. Add ansible implementation of installation documentation
 1. Add installation instructions that point to ansible script
+
+## Step 8 - Basic account management
+
+1. Add header/footer, and importing
+1. Add simple account maintenance screen with username, password update
+   * username update is noop
+   * delete is noop
+1. Add email address update with verification
