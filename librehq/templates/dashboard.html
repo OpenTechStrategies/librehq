@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 Welcome
 
 {% for module in modules %}
@@ -5,3 +7,4 @@ Welcome
   {% include module %}
 </div>
 {% endfor %}
+{% endblock %}
