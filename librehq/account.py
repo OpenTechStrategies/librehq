@@ -85,6 +85,12 @@ def signin_required(view):
 
     return wrapped_view
 
+@bp.route('/account')
+@signin_required
+def account():
+    account = Account.query.get(session.get("account_id"))
+    return render_template("account.html", account=account)
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
