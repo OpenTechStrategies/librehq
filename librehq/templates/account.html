@@ -2,6 +2,8 @@
 {% block content %}
 <h1>Account page for {{ account.username }}</h1>
 
+<h2>Update Account</h2>
+
 <form action="updateAccount" method="post">
   <h2>Change Username</h2>
   <input name="username" value="{{ account.username }}">
@@ -18,5 +20,14 @@
   <hr>
 
   <input type="submit" value="Update Account">
+</form>
+
+<h2>Delete Account</h2>
+
+<form action="deleteAccount" method="post">
+  <input
+    type="submit"
+    onclick="return window.confirm('Confirm Delete Account')"
+    value="Delete Account">
 </form>
 {% endblock %}

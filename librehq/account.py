@@ -121,6 +121,12 @@ def updateAccount():
     else:
         return redirect(url_for(".account"))
 
+@bp.route("/deleteAccount", methods=(["POST"]))
+@signin_required
+def deleteAccount():
+    flash("Deleting account isn't supported at this time")
+    return redirect(url_for(".account"))
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
