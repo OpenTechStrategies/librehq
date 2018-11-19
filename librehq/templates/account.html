@@ -19,12 +19,16 @@
 
   <hr>
 
+  <h2>Current Password</h2>
+  <input type="password" name="current_password">
   <input type="submit" value="Update Account">
 </form>
 
 <h2>Delete Account</h2>
 
 <form action="deleteAccount" method="post">
+  <h2>Current Password</h2>
+  <input type="password" name="current_password">
   <input
     type="submit"
     onclick="return window.confirm('Confirm Delete Account')"

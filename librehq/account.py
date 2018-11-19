@@ -101,7 +101,13 @@ def account():
 @signin_required
 def updateAccount():
     account = Account.query.get(session.get("account_id"))
-    account.password = request.form["password"]
+
+    if not request.form["current_password"] == account.password:
+        flash("Current password doesn't match")
+        return redirect(url_for(".account"))
+
+    if request.form["password"]:
+        account.password = request.form["password"]
 
     if not account.email == request.form["email"]:
         emailUpdated = True
@@ -124,6 +130,11 @@ def updateAccount():
 @bp.route("/deleteAccount", methods=(["POST"]))
 @signin_required
 def deleteAccount():
+    account = Account.query.get(session.get("account_id"))
+    if not request.form["current_password"] == account.password:
+        flash("Current password doesn't match")
+        return redirect(url_for(".account"))
+
     flash("Deleting account isn't supported at this time")
     return redirect(url_for(".account"))
 
