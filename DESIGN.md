@@ -87,6 +87,35 @@ through partials and flask blueprints.  Some conventions:
 * The service should expose a `main_partial()` that returns a template
   to be imported into the main section
 
+### Templates
+
+When designing module pages, all of the templates should be in the
+`templates/<modulename>/` subdirectory to prevent confusion in the top
+level directory.  For instance, if you have `templates/dashboard.html`,
+in your module, when running as part of the larger librehq site, the main
+core `templates/dashboard.html` will get chosen for rendering, even if
+called from the module Blueprint.  So, you need to have (for example)
+`templates/wikis/dashboard.html` and reference `wikis/dashboard.html` in
+your modules flask code.
+
+Similarly, you should include the line:
+
+```
+{% if not g.standalone %}{% extends "base.html" %}{% endif %}
+```
+
+in all of your templates to pull in the header/footer from the core package
+when not running as a standalone app.  Then, in your standalone bootup
+section (usually in `__init__.py`), you should have the following:
+
+```python
+@app.before_request
+def set_standalone():
+    g.standalone = True
+```
+
+### Outstanding questsion
+
 Some outstanding questions to be determined via development:
 
 * Should service sections have their own look and feel that matches the
