@@ -17,11 +17,11 @@ Then run `pipenv` to get all the local dependencies (see the Pipfile for the
 full list)
 
 ```
-$ pipenv install
+$ pipenv install --dev
 
 # Initialize pipenv for submodules, which is needed for database migrations later.
 $ for submodule in wikis ; do
-  (cd $submodule ; pipenv install)
+  (cd $submodule ; pipenv install --dev)
 done
 ```
 
