@@ -114,7 +114,19 @@ def set_standalone():
     g.standalone = True
 ```
 
-### Outstanding questsion
+### Third Party Libraries
+
+JS and CSS third party libraries loaded by the LibreHQ app should be served
+from our servers, rather than from elsewhere like a CDN (Content Delivery
+Network). The versions of these libraries that we use should be committed
+and tracked by git. The reasons for this include consistency and security.
+
+For minified versions of these libraries (i.e. bulma.css and bulma.min.css),
+both versions should be present in the repo and also on our servers, so that
+anyone can just remove the 'min' from the URL to see the non-minified
+source code.
+
+### Outstanding questions
 
 Some outstanding questions to be determined via development:
 
