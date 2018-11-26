@@ -89,6 +89,9 @@ through partials and flask blueprints.  Some conventions:
 
 ### Templates
 
+_Note: this section will need to be updated once templates are moved to
+Vue.js, see 'Front End' section below._
+
 When designing module pages, all of the templates should be in the
 `templates/<modulename>/` subdirectory to prevent confusion in the top
 level directory.  For instance, if you have `templates/dashboard.html`,
@@ -126,6 +129,28 @@ both versions should be present in the repo and also on our servers, so that
 anyone can just remove the 'min' from the URL to see the non-minified
 source code.
 
+### Front End
+
+[Vue.js](https://vuejs.org/) will be used on the front end for HTML
+templating and for working with the DOM. (The current Flask/Jinja
+templates will be moved to Vue templates/components.) The Flask server
+will send JSON data to be rendered into pages by Vue. One advantage of
+this decoupled approach is it is easier to test the server in isolation
+from the client, and vice-versa (by using mock JSON data). Further details
+are TBD but one possibility would be to take a
+['single-page-app'](https://en.wikipedia.org/wiki/Single-page_application)
+approach.
+
+The submodule services that LibreHQ provides (wiki, chat, etc.) will be
+separate from the main LibreHQ (Vue-based) UI. There won't be a Vue wrapper
+page that loads a wiki in an iframe or anything like that. There will be UI
+for managing a wiki in the LibreHQ app, but when you open the wiki it will
+look like a regular vanilla wiki, and there won't be anything Vue-rendered
+on the page, no LibreHQ header, footer, etc.
+
+LibreHQ will use [npm](https://www.npmjs.com/) to manage Vue and other
+front-end dependencies.
+
 ### Outstanding questions
 
 Some outstanding questions to be determined via development:
@@ -135,3 +160,8 @@ Some outstanding questions to be determined via development:
   design?
 * What level of functionality should be exposed in the main dashboard
   through `main_partial`
+* Currently submodules provide the UI/templates for their management,
+  which are displayed within the main dashboard. Will they still do this
+  when templating is moved to Vue.js? How? Would each submodule provide a
+  Vue component that's rendered in the main dashboard? This would mean
+  each submodule would have its own npm-managed front-end dependencies?
