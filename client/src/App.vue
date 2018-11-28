@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import "./assets/sass/main.scss";
 import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
