@@ -1,29 +1,37 @@
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Header v-bind:loggedIn="page === 'dashboard' || page === 'account'"/>
+    <Messages />
+    <Signin v-if="page === 'signin'"/>
+    <Dashboard v-else-if="page === 'dashboard'"/>
+    <Account v-else-if="page === 'account'"/>
+    <Footer />
   </div>
 </template>
 
 <script>
 import "./assets/sass/main.scss";
-import HelloWorld from "./components/HelloWorld.vue";
+import Header from "./components/Header.vue";
+import Messages from "./components/Messages.vue";
+import Signin from "./components/Signin.vue";
+import Dashboard from "./components/Dashboard.vue";
+import Account from "./components/Account.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    Header,
+    Messages,
+    Signin,
+    Dashboard,
+    Account,
+    Footer
+  },
+  props: {
+    page: String
   }
 };
 </script>
 
-<style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<!-- <style lang="scss"></style> -->
