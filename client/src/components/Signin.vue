@@ -27,7 +27,7 @@
               <div class="control has-icons-left has-icons-right">
                 <input class="input" type="text" name="username" placeholder="Username">
                 <span class="icon is-small is-left">
-                  <i class="fas fa-user"></i>
+                  <font-awesome-icon icon="user"></font-awesome-icon>
                 </span>
               </div>
             </div>
@@ -37,7 +37,7 @@
               <div class="control has-icons-left has-icons-right">
                 <input class="input" type="password" name="password" placeholder="Password">
                 <span class="icon is-small is-left">
-                  <i class="fas fa-key"></i>
+                  <font-awesome-icon icon="key"></font-awesome-icon>
                 </span>
               </div>
             </div>
@@ -47,7 +47,7 @@
               <div class="control has-icons-left has-icons-right">
                 <input class="input" type="email" name="email" placeholder="Email Address">
                 <span class="icon is-small is-left">
-                  <i class="fas fa-envelope"></i>
+                  <font-awesome-icon icon="envelope"></font-awesome-icon>
                 </span>
               </div>
             </div>
@@ -70,7 +70,7 @@
               <div class="control has-icons-left has-icons-right">
                 <input class="input" type="text" name="username" placeholder="Username">
                 <span class="icon is-small is-left">
-                  <i class="fas fa-user"></i>
+                  <font-awesome-icon icon="user"></font-awesome-icon>
                 </span>
               </div>
             </div>
@@ -80,7 +80,7 @@
               <div class="control has-icons-left has-icons-right">
                 <input class="input" type="password" name="password" placeholder="Password">
                 <span class="icon is-small is-left">
-                  <i class="fas fa-key"></i>
+                  <font-awesome-icon icon="key"></font-awesome-icon>
                 </span>
               </div>
             </div>

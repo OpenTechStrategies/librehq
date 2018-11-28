@@ -11,6 +11,7 @@
 
 <script>
 import "./assets/sass/main.scss";
+import "./fontawesome.js";
 import Header from "./components/Header.vue";
 import Messages from "./components/Messages.vue";
 import Signin from "./components/Signin.vue";
