@@ -158,7 +158,7 @@ issues is done, there will be several long-lived git branches for
 various purposes. Basically changes will work their way from the top of
 this list to the bottom.
 
-- __mvp-dev__ (currently named __mvp__): Contains work on the initial
+- __mvp-dev__: Contains work on the initial
 'minimum viable product'. Feature branches are merged into this branch
 during initial mvp phase. Will not be needed after mvp phase is done.
 - __master__: Has the latest code that has been tested and reviewed.
