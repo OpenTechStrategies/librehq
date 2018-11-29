@@ -1,4 +1,10 @@
 @charset "utf-8";
 
+// Setup custom colors.
+$green: rgb(66, 147, 90);
+
+// Set Bulma's global variables to custom values.
+$primary: $green;
+
 // The tilde refers Webpack/sass-loader to node_modules.
 @import '~bulma/bulma.sass'
