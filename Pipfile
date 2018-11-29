@@ -21,4 +21,6 @@ python_version = "3.6"
 
 [dev-packages]
 
+# This path may need to be changed to an absolute path to the wikis directory.
+# "/absolute/path/to/librehq-core/wikis/"
 "c251336" = {path = "./wikis/", editable = true}
