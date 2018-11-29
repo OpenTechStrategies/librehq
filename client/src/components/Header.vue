@@ -15,8 +15,10 @@
             <a v-if="loggedIn"
               role="button"
               class="navbar-burger burger"
+              v-bind:class="mainNavActive"
               aria-label="menu"
               aria-expanded="false"
+              @click="toggleMainNavActive"
             >
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
@@ -28,6 +30,7 @@
           v-if="loggedIn"
           id="mainNavbar"
           class="navbar-menu"
+          v-bind:class="mainNavActive"
         >
 
           <div class="navbar-start">
@@ -57,6 +60,18 @@ export default {
   name: "Header",
   props: {
     loggedIn: Boolean
+  },
+  data() {
+    return {
+      mainNavActive: {
+        "is-active": false
+      }
+    };
+  },
+  methods: {
+    toggleMainNavActive() {
+      this.mainNavActive["is-active"] = !this.mainNavActive["is-active"];
+    }
   }
 };
 </script>
