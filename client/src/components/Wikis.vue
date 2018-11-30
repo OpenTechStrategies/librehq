@@ -46,6 +46,8 @@
                             class="file-input"
                             type="file"
                             name="csv"
+                            id="populateWikiCsvInput"
+                            @change="fileInputChange"
                           >
                           <span class="file-cta">
                             <span class="file-icon">
@@ -53,6 +55,10 @@
                             </span>
                             <span class="file-label">Choose a CSV file…</span>
                           </span>
+                          <span
+                            v-if="populateWikiCsvInput"
+                            class="file-name"
+                          >{{populateWikiCsvInput}}</span>
                         </label>
                       </div>
                     </div>
@@ -63,6 +69,8 @@
                             class="file-input"
                             type="file"
                             name="config"
+                            id="populateWikiConfigInput"
+                            @change="fileInputChange"
                           >
                           <span class="file-cta">
                             <span class="file-icon">
@@ -70,6 +78,10 @@
                             </span>
                             <span class="file-label">Choose a Config file…</span>
                           </span>
+                          <span
+                            v-if="populateWikiConfigInput"
+                            class="file-name"
+                          >{{populateWikiConfigInput}}</span>
                         </label>
                       </div>
                     </div>
@@ -132,6 +144,8 @@
                       class="file-input"
                       type="file"
                       name="csv"
+                      id="createWikiCsvInput"
+                      @change="fileInputChange"
                     >
                     <span class="file-cta">
                       <span class="file-icon">
@@ -141,6 +155,10 @@
                         Choose a CSV file…
                       </span>
                     </span>
+                    <span
+                      v-if="createWikiCsvInput"
+                      class="file-name"
+                    >{{createWikiCsvInput}}</span>
                   </label>
                 </div>
               </div>
@@ -151,6 +169,8 @@
                       class="file-input"
                       type="file"
                       name="config"
+                      id="createWikiConfigInput"
+                      @change="fileInputChange"
                     >
                     <span class="file-cta">
                       <span class="file-icon">
@@ -160,6 +180,10 @@
                         Choose a Config file…
                       </span>
                     </span>
+                    <span
+                      v-if="createWikiConfigInput"
+                      class="file-name"
+                    >{{createWikiConfigInput}}</span>
                   </label>
                 </div>
               </div>
@@ -179,6 +203,22 @@
 
 <script>
 export default {
-  name: "Wikis"
+  name: "Wikis",
+  data() {
+    return {
+      populateWikiCsvInput: false,
+      populateWikiConfigInput: false,
+      createWikiCsvInput: false,
+      createWikiConfigInput: false
+    };
+  },
+  methods: {
+    fileInputChange(event) {
+      const input = event.target;
+      if (input.files.length > 0) {
+        this[input.id] = input.files[0].name;
+      }
+    }
+  }
 };
 </script>
