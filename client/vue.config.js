@@ -20,6 +20,12 @@ module.exports = {
       template: "public/index.html",
       filename: "account.html",
       title: "My Account | LibreHQ beta"
+    },
+    wikis: {
+      entry: "src/pages/wikis/main.js",
+      template: "public/index.html",
+      filename: "wikis.html",
+      title: "Wikis | LibreHQ beta"
     }
   }
 };

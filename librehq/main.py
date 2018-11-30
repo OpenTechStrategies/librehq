@@ -2,7 +2,6 @@ from flask import (
     Blueprint, redirect, render_template, session
 )
 
-import wikis
 from librehq import account
 
 bp = Blueprint('main', __name__, url_prefix='/')
@@ -17,7 +16,4 @@ def index():
 @bp.route('/dashboard')
 @account.signin_required
 def dashboard():
-    modules = [
-        wikis.main_partial()
-    ]
-    return render_template("dashboard.html", modules=modules)
+    return render_template("dashboard.html")
