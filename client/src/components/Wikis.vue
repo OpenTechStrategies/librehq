@@ -42,7 +42,11 @@
                       <input type="hidden" name="wiki_id" value="wiki.id" /> <!-- value="{{ wiki.id }}" -->
                       <div class="file">
                         <label class="file-label">
-                          <input class="file-input" type="file" name="csv">
+                          <input
+                            class="file-input"
+                            type="file"
+                            name="csv"
+                          >
                           <span class="file-cta">
                             <span class="file-icon">
                               <i class="fas fa-upload"></i>
@@ -55,7 +59,11 @@
                     <div class="field">
                       <div class="file">
                         <label class="file-label">
-                          <input class="file-input" type="file" name="config">
+                          <input
+                            class="file-input"
+                            type="file"
+                            name="config"
+                          >
                           <span class="file-cta">
                             <span class="file-icon">
                               <i class="fas fa-upload"></i>
@@ -120,7 +128,11 @@
               <div class="field">
                 <div class="file">
                   <label class="file-label">
-                    <input class="file-input" type="file" name="csv">
+                    <input
+                      class="file-input"
+                      type="file"
+                      name="csv"
+                    >
                     <span class="file-cta">
                       <span class="file-icon">
                         <i class="fas fa-upload"></i>
@@ -135,7 +147,11 @@
               <div class="field">
                 <div class="file">
                   <label class="file-label">
-                    <input class="file-input" type="file" name="config">
+                    <input
+                      class="file-input"
+                      type="file"
+                      name="config"
+                    >
                     <span class="file-cta">
                       <span class="file-icon">
                         <i class="fas fa-upload"></i>
