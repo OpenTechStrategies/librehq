@@ -1,10 +1,4 @@
-import Vue from "vue";
-import App from "../../App.vue";
+import makePage from "../makePage.js";
 import Signin from "../../components/Signin.vue";
 
-Vue.config.productionTip = false;
-
-new Vue({
-  render: createElement =>
-    createElement(App, { props: { loggedIn: false } }, [createElement(Signin)])
-}).$mount("#app");
+makePage({ loggedIn: false }, Signin);
