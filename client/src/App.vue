@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <Header v-bind:loggedIn="page === 'dashboard' || page === 'account'"/>
+    <Header v-bind:loggedIn="loggedIn"/>
     <Messages />
-    <Signin v-if="page === 'signin'"/>
-    <Dashboard v-else-if="page === 'dashboard'"/>
-    <Account v-else-if="page === 'account'"/>
+    <slot />
     <Footer />
   </div>
 </template>
@@ -14,9 +12,6 @@ import "./assets/sass/main.scss";
 import "./fontawesome.js";
 import Header from "./components/Header.vue";
 import Messages from "./components/Messages.vue";
-import Signin from "./components/Signin.vue";
-import Dashboard from "./components/Dashboard.vue";
-import Account from "./components/Account.vue";
 import Footer from "./components/Footer.vue";
 
 export default {
@@ -24,13 +19,10 @@ export default {
   components: {
     Header,
     Messages,
-    Signin,
-    Dashboard,
-    Account,
     Footer
   },
   props: {
-    page: String
+    loggedIn: Boolean
   }
 };
 </script>
