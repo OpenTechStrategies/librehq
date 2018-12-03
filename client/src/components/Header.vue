@@ -12,7 +12,7 @@
             class="navbar-item has-text-weight-bold"
             href="/"
           >LibreHQ <em>beta</em></a>
-            <a v-if="loggedIn"
+            <a v-if="signedIn"
               role="button"
               class="navbar-burger burger"
               v-bind:class="mainNavActive"
@@ -27,7 +27,7 @@
         </div>
 
         <div
-          v-if="loggedIn"
+          v-if="signedIn"
           id="mainNavbar"
           class="navbar-menu"
           v-bind:class="mainNavActive"
@@ -59,7 +59,7 @@
 export default {
   name: "Header",
   props: {
-    loggedIn: Boolean
+    signedIn: Boolean
   },
   data() {
     return {

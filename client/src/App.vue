@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header v-bind:loggedIn="loggedIn"/>
+    <Header v-bind:signedIn="signedIn"/>
     <Messages />
     <slot />
     <Footer />
@@ -22,7 +22,7 @@ export default {
     Footer
   },
   props: {
-    loggedIn: Boolean
+    signedIn: Boolean
   }
 };
 </script>
