@@ -8,16 +8,19 @@
     <section class="section">
       <div class="container">
         <div class="columns">
-          <!-- {% for wiki in wikis %} -->
-          <div class="column">
+          <div
+            class="column"
+            v-for="wiki of wikis"
+            v-bind:key="wiki.id"
+          >
             <div class="tile is-ancestor">
               <div class="tile is-vertical is-parent">
 
                 <div class="tile is-child">
-                  <h2 class="title is-4">wiki.wikiname</h2>
+                  <h2 class="title is-4">{{wiki.wikiname}}</h2>
                   <a
-                    href='http://wiki.wikiname.otswiki.net'
-                  >Visit wiki.wikiname</a>
+                    v-bind:href="wiki.url"
+                  >Visit {{wiki.wikiname}}</a>
                 </div>
 
                 <div class="tile is-child">
@@ -25,7 +28,7 @@
                     <input
                       type="hidden"
                       name="wiki_id"
-                      value="wiki-id"
+                      v-bind:value="wiki.id"
                     >
                     <div class="field">
                       <label class="label">Rename Wiki</label>
@@ -63,7 +66,7 @@
                       <input
                         type="hidden"
                         name="wiki_id"
-                        value="wiki.id"
+                        v-bind:value="wiki.id"
                       />
                       <div class="file">
                         <label class="file-label">
@@ -131,7 +134,7 @@
                     <input
                       type="hidden"
                       name="wiki_id"
-                      value="wiki.id"
+                      v-bind:value="wiki.id"
                     >
                     <div class="field">
                       <label class="label">Delete Wiki</label>
@@ -151,7 +154,6 @@
               </div>
             </div>
           </div>
-          <!-- {% endfor %} -->
 
           <div class="column">
             <h2 class="title is-4">Create a Wiki</h2>
@@ -266,6 +268,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Wikis",
   data() {
@@ -273,7 +277,8 @@ export default {
       populateWikiCsvInput: false,
       populateWikiConfigInput: false,
       createWikiCsvInput: false,
-      createWikiConfigInput: false
+      createWikiConfigInput: false,
+      wikis: []
     };
   },
   methods: {
@@ -282,7 +287,21 @@ export default {
       if (input.files.length > 0) {
         this[input.id] = input.files[0].name;
       }
+    },
+    getWikisData() {
+      axios
+        .get("/wikis/wikisdata")
+        .then(res => {
+          this.wikis = res.data;
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     }
+  },
+  created() {
+    this.getWikisData();
   }
 };
 </script>
