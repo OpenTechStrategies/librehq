@@ -1,10 +1,15 @@
 from flask import (
-    Blueprint, redirect, render_template, session
+    Blueprint, redirect, render_template, session, get_flashed_messages,
+    jsonify
 )
 
 from librehq import account
 
 bp = Blueprint('main', __name__, url_prefix='/')
+
+@bp.route("/getmessages")
+def get_messages():
+    return jsonify(get_flashed_messages())
 
 @bp.route('')
 def index():
