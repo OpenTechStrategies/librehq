@@ -14,32 +14,57 @@
               <div class="tile is-vertical is-parent">
 
                 <div class="tile is-child">
-                  <h2 class="title is-4">wiki.wikiname</h2> <!-- {{ wiki.wikiname }} -->
-                  <a href='http://wiki.wikiname.otswiki.net'>Visit wiki.wikiname</a> <!-- {{ wiki.wikiname }} -->
+                  <h2 class="title is-4">wiki.wikiname</h2>
+                  <a
+                    href='http://wiki.wikiname.otswiki.net'
+                  >Visit wiki.wikiname</a>
                 </div>
 
                 <div class="tile is-child">
                   <form method="post" action="renamewiki">
-                    <input type="hidden" name="wiki_id" value="wiki-id"> <!-- value="{{ wiki.id }}" -->
+                    <input
+                      type="hidden"
+                      name="wiki_id"
+                      value="wiki-id"
+                    >
                     <div class="field">
                       <label class="label">Rename Wiki</label>
                       <div class="control">
-                        <input class="input" type="text" name="new_wiki_name" placeholder="New Name">
+                        <input
+                          class="input"
+                          type="text"
+                          name="new_wiki_name"
+                          placeholder="New Name"
+                        >
                       </div>
                     </div>
                     <div class="field">
                       <div class="control">
-                        <input class="button is-link" type="submit" value="Rename Wiki">
+                        <input
+                          class="button is-link"
+                          type="submit"
+                          value="Rename Wiki"
+                        >
                       </div>
                     </div>
                   </form>
                 </div>
 
                 <div class="tile is-child">
-                  <form action="uploadcsv" method="post" enctype="multipart/form-data">
+                  <form
+                    action="uploadcsv"
+                    method="post"
+                    enctype="multipart/form-data"
+                  >
                     <div class="field">
-                      <label class="label">Populate Wiki with CSV Data</label>
-                      <input type="hidden" name="wiki_id" value="wiki.id" /> <!-- value="{{ wiki.id }}" -->
+                      <label
+                        class="label"
+                      >Populate Wiki with CSV Data</label>
+                      <input
+                        type="hidden"
+                        name="wiki_id"
+                        value="wiki.id"
+                      />
                       <div class="file">
                         <label class="file-label">
                           <input
@@ -53,7 +78,9 @@
                             <span class="file-icon">
                               <i class="fas fa-upload"></i>
                             </span>
-                            <span class="file-label">Choose a CSV file…</span>
+                            <span
+                              class="file-label"
+                            >Choose a CSV file…</span>
                           </span>
                           <span
                             v-if="populateWikiCsvInput"
@@ -76,7 +103,9 @@
                             <span class="file-icon">
                               <i class="fas fa-upload"></i>
                             </span>
-                            <span class="file-label">Choose a Config file…</span>
+                            <span
+                              class="file-label"
+                            >Choose a Config file…</span>
                           </span>
                           <span
                             v-if="populateWikiConfigInput"
@@ -87,7 +116,11 @@
                     </div>
                     <div class="field">
                       <div class="control">
-                        <input class="button is-link" type="submit" value="Populate Wiki with CSV">
+                        <input
+                          class="button is-link"
+                          type="submit"
+                          value="Populate Wiki with CSV"
+                        >
                       </div>
                     </div>
                   </form>
@@ -95,12 +128,21 @@
 
                 <div class="tile is-child">
                   <form method="post" action="deletewiki">
-                    <input type="hidden" name="wiki_id" value="wiki.id"> <!-- value="{{ wiki.id }}" -->
+                    <input
+                      type="hidden"
+                      name="wiki_id"
+                      value="wiki.id"
+                    >
                     <div class="field">
                       <label class="label">Delete Wiki</label>
                       <div class="control">
                         <!-- TODO: replace with non inline onclick code -->
-                        <input class="button is-danger" type="submit" value="Delete Wiki" onclick='return confirm("Confirm Wiki Deletion");'>
+                        <input
+                          class="button is-danger"
+                          type="submit"
+                          value="Delete Wiki"
+                          onclick='return confirm("Confirm Wiki Deletion");'
+                        >
                       </div>
                     </div>
                   </form>
@@ -117,12 +159,21 @@
               <div class="field">
                 <label class="label">Wiki Name</label>
                 <div class="control">
-                  <input class="input" type="text" name="name" placeholder="Wiki Name">
+                  <input
+                    class="input"
+                    type="text"
+                    name="name"
+                    placeholder="Wiki Name"
+                  >
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input class="button is-link" type="submit" value="Create Wiki">
+                  <input
+                    class="button is-link"
+                    type="submit"
+                    value="Create Wiki"
+                  >
                 </div>
               </div>
             </form>
@@ -130,11 +181,20 @@
 
           <div class="column">
             <h2 class="title is-4">Create a Wiki from CSV Data</h2>
-            <form action="uploadcsv" method="post" enctype="multipart/form-data">
+            <form
+              action="uploadcsv"
+              method="post"
+              enctype="multipart/form-data"
+            >
               <div class="field">
                 <label class="label">Wiki Name</label>
                 <div class="control">
-                  <input class="input" type="text" name="name" placeholder="Wiki Name">
+                  <input
+                    class="input"
+                    type="text"
+                    name="name"
+                    placeholder="Wiki Name"
+                  >
                 </div>
               </div>
               <div class="field">
@@ -189,7 +249,11 @@
               </div>
               <div class="field">
                 <div class="control">
-                  <input class="button is-link" type="submit" value="Create Wiki from CSV Data">
+                  <input
+                    class="button is-link"
+                    type="submit"
+                    value="Create Wiki from CSV Data"
+                  >
                 </div>
               </div>
             </form>
