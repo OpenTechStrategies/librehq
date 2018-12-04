@@ -79,7 +79,7 @@
                           >
                           <span class="file-cta">
                             <span class="file-icon">
-                              <i class="fas fa-upload"></i>
+                              <font-awesome-icon icon="upload"></font-awesome-icon>
                             </span>
                             <span
                               class="file-label"
@@ -104,7 +104,7 @@
                           >
                           <span class="file-cta">
                             <span class="file-icon">
-                              <i class="fas fa-upload"></i>
+                              <font-awesome-icon icon="upload"></font-awesome-icon>
                             </span>
                             <span
                               class="file-label"
@@ -211,7 +211,7 @@
                     >
                     <span class="file-cta">
                       <span class="file-icon">
-                        <i class="fas fa-upload"></i>
+                        <font-awesome-icon icon="upload"></font-awesome-icon>
                       </span>
                       <span class="file-label">
                         Choose a CSV file…
@@ -236,7 +236,7 @@
                     >
                     <span class="file-cta">
                       <span class="file-icon">
-                        <i class="fas fa-upload"></i>
+                        <font-awesome-icon icon="upload"></font-awesome-icon>
                       </span>
                       <span class="file-label">
                         Choose a Config file…
