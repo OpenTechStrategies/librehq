@@ -37,7 +37,7 @@
                     class="input"
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder="New Password"
                   >
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="key"></font-awesome-icon>
@@ -52,11 +52,26 @@
                     class="input"
                     type="email"
                     name="email"
-                    placeholder="Email Address"
+                    placeholder="New Email Address"
                     v-bind:value="account.email"
                   >
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="envelope"></font-awesome-icon>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Current Password</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input
+                    class="input"
+                    type="password"
+                    name="current_password"
+                    placeholder="Password"
+                  >
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="key"></font-awesome-icon>
                   </span>
                 </div>
               </div>
@@ -73,16 +88,36 @@
 
             </form>
           </div>
-          <div class="column">
+          <div class="column is-one-third">
 
             <h2 class="title is-4">Delete Account</h2>
             <form action="deleteAccount" method="post">
-              <input
-                class="button is-danger"
-                type="submit"
-                onclick="return window.confirm('Confirm Delete Account')"
-                value="Delete Account"
-              >
+
+              <div class="field">
+                <label class="label">Current Password</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input
+                    class="input"
+                    type="password"
+                    name="current_password"
+                    placeholder="Password"
+                  >
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="key"></font-awesome-icon>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <input
+                    class="button is-danger"
+                    type="submit"
+                    onclick="return window.confirm('Confirm Delete Account')"
+                    value="Delete Account"
+                  >
+                </div>
+              </div>
             </form>
 
           </div>
