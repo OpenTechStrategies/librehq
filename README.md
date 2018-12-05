@@ -17,11 +17,11 @@ Then run `pipenv` to get all the local dependencies (see the Pipfile for the
 full list)
 
 ```
-$ pipenv install --dev
+$ pipenv install --python 3.6 --dev
 
 # Initialize pipenv for submodules, which is needed for database migrations later.
 $ for submodule in wikis ; do
-  (cd $submodule ; pipenv install --dev)
+  (cd $submodule ; pipenv install --python 3.6 --dev)
 done
 ```
 
