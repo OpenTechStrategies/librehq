@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import (Flask, render_template)
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
@@ -26,6 +26,10 @@ app.config["MAIL_PORT"] = 1025
 app.config["SECRET_KEY"] = "dev"
 app.config["SECURITY_PASSWORD_SALT"] = "salt"
 mail = Mail(app)
+
+# To let submodules render templates located here in librehq-core.
+def render_template_in_core(template, **context):
+    return render_template(template, **context)
 
 from librehq import main
 from librehq import account

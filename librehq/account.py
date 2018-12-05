@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, flash, render_template, redirect, request, session, url_for
+    Blueprint, flash, render_template, redirect, request, session, url_for,
+    jsonify
 )
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
@@ -94,8 +95,18 @@ def signin_required(view):
 @bp.route('/account')
 @signin_required
 def account():
+    return render_template("account.html")
+
+@bp.route("/account-data", methods=(["GET"]))
+@signin_required
+def account_data():
     account = Account.query.get(session.get("account_id"))
-    return render_template("account.html", account=account)
+    return jsonify({
+        "account": {
+            "username": account.username,
+            "email": account.email
+        }
+    })
 
 @bp.route("/updateAccount", methods=(["POST"]))
 @signin_required
