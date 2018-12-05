@@ -1,4 +1,12 @@
-{% include "header.html" %}
-{% include "messages.html" %}
-{% block content %} {% endblock %}
-{% include "footer.html" %}
+<!DOCTYPE html>
+<html>
+  {% include "head.html" %}
+  <body>
+    {% include "header.html" %}
+    {% include "messages.html" %}
+    {% block content %}
+    {% endblock %}
+    {% include "footer.html" %}
+    <script src="{{ url_for('static', filename='js/librehq_core.js') }}"></script>
+  </body>
+</html>
