@@ -65,11 +65,13 @@ LibreHQ uses [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/),
 and the database.  Mostly this is done by just updating the model and running
 `FLASK_APP=librehq pipenv run flask db migrate` to create the revisions.
 
-Create a user and database for the application.  For now, the user/password
-is harcoded in the application, and so needs to match the following:
+Create a database user and databases owned by that user. You will be prompted
+to enter/create a password for the database user. Make a note of this password.
+For now, the user name is harcoded in the application, and so needs to match
+the following:
 
 ```ShellSession
-$ sudo -u postgres createuser librehq
+$ sudo -u postgres createuser --pwprompt librehq
 $ sudo -u postgres createdb --owner=librehq librehq_core
 $ sudo -u postgres createdb --owner=librehq librehq_wikis # For wikis submodule
 ```
