@@ -35,7 +35,7 @@ import wikis
 app.register_blueprint(main.bp);
 app.register_blueprint(account.bp);
 
-wikis.initialize_module(app, db)
+wikis.initialize_service(app, db)
 
 if __name__ == "__librehq__":
     app.run(host='0.0.0.0')

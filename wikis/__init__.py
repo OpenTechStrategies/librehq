@@ -14,7 +14,7 @@ def signin_required(view):
 
     return wrapped_view
 
-def initialize_module(app, app_db):
+def initialize_service(app, app_db):
     global db
     db = app_db
 
