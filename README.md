@@ -2,6 +2,13 @@
 
 This is a placeholder description that should be filled out.
 
+## Services
+
+LibreHQ offers various services that are organized as separate Python
+modules and use separate databases. Currently these are:
+
+* wikis: a wiki hosting and generation tool
+
 # Running
 
 ## Back End: Dependencies
@@ -16,22 +23,10 @@ but the common ones are:
 Then run `pipenv` to get all the local dependencies (see the Pipfile for the
 full list)
 
-```
+```ShellSession
 $ pipenv install --python 3.6 --dev
-
-# Initialize pipenv for submodules, which is needed for database migrations later.
-$ for submodule in wikis ; do
-  (cd $submodule ; pipenv install --python 3.6 --dev)
-done
 ```
 
-### Sub modules
-
-Each section of librehq is setup as its own project, which should be bootable
-independently for development and testing, which is then added as a submodule
-to this project.  Currently added are:
-
-* librehq-wikis as wikis: a wiki hosting and generation tool
 
 ## Back End: Setting up the app's configuration
 
@@ -57,12 +52,12 @@ follows:
 $ FLASK_APP=librehq LIBREHQ_CONFIG=/path/to/myconfig.py pipenv run flask run
 ```
 
-## Back End: Configuring the database
+## Back End: Configuring the databases
 
 LibreHQ uses [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/),
 [SQLAlchemy](https://www.sqlalchemy.org/), and
 [Alembic](https://alembic.zzzcomputing.com/en/latest/)  to manage migrations
-and the database.  Mostly this is done by just updating the model and running
+and the databases.  Mostly this is done by just updating the model and running
 `FLASK_APP=librehq pipenv run flask db migrate` to create the revisions.
 
 Create a database user and databases owned by that user. You will be prompted
@@ -73,7 +68,7 @@ the following:
 ```ShellSession
 $ sudo -u postgres createuser --pwprompt librehq
 $ sudo -u postgres createdb --owner=librehq librehq_core
-$ sudo -u postgres createdb --owner=librehq librehq_wikis # For wikis submodule
+$ sudo -u postgres createdb --owner=librehq librehq_wikis # For wikis service 
 ```
 
 Run flask-migrate migrations
@@ -81,22 +76,14 @@ Run flask-migrate migrations
 FLASK_APP=librehq pipenv run flask db upgrade
 ```
 
-Then run migrate for each of the submodules.  The reason we do it this way is
-so that each submodule can handle their own database setup, and leave core to
-be nothing more than a submodule collector.  Each submodule also needs its own
-config.py that has the default database matching the submodule database (they
-should each have a .tmpl to use)
+Then run flask-migrate for each of the services.  We do it this way so each
+service can handle its own database setup.
 
 ```ShellSession
-for submodule in wikis ; do
-  (cd $submodule ; FLASK_APP=$submodule pipenv run flask db upgrade)
+for service in wikis ; do
+  (cd $service ; FLASK_APP=$service pipenv run flask db upgrade)
 done
 ```
-
-**NOTE:** If you want to use `flask db migrate`, you need to disable importing
-of the submodules or else you'll get automatic generate of revisions for those
-submodules.  If this becomes a hassle, then in the future some kind of top level
-swtich should be used.
 
 ## Front End: Dependencies
 
