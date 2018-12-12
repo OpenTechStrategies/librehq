@@ -38,6 +38,15 @@ to approve the transfer.
 
 ## Services and URLs
 
+For clear communication, we'll specify some terminology for services
+and their sub-parts.  A given 'service' includes both an 'upstream
+package' (e.g. MediaWiki), and a 'service wrapper', which is our
+LibreHQ code for managing and working with the 'upstream package'.
+
+Service wrapper code is written in Python (and JavaScript for
+UI/front end), regardless of the language of the upstream package
+(e.g. PHP).
+
 To create an account, start at `https://librehq.com/`.  Afterwards
 you'll have a landing page at `https://librehq.com/USER` that lists
 all the services available and which ones are active (remember, in the
