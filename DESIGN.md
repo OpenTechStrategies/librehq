@@ -102,12 +102,7 @@ Some outstanding questions to be determined via development:
   service they provide, or should they adhere to a greater librehq
   design?
 * What level of functionality should be exposed in the main dashboard
-  through `main_partial`
-* Currently submodules provide the UI/templates for their management,
-  which are displayed within the main dashboard. Will they still do this
-  when templating is moved to Vue.js? How? Would each submodule provide a
-  Vue component that's rendered in the main dashboard? This would mean
-  each submodule would have its own npm-managed front-end dependencies?
+  for each service?
 
 ## Front End
 
