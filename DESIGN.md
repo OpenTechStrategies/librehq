@@ -85,57 +85,14 @@ conventions:
 * The directory for the service will be just `<service>` (e.g. 'wikis')
 * The service should use as a base `"/<service>/"` for web requests
 
-### Templates
+### Service Templates
 
-_Note: this section will need to be updated once templates are moved to
-Vue.js, see 'Front End' section below._
-
-When designing module pages, all of the templates should be in the
-`templates/<modulename>/` subdirectory to prevent confusion in the top
-level directory.  For instance, if you have `templates/dashboard.html`,
-in your module, when running as part of the larger librehq site, the main
-core `templates/dashboard.html` will get chosen for rendering, even if
-called from the module Blueprint.  So, you need to have (for example)
-`templates/wikis/dashboard.html` and reference `wikis/dashboard.html` in
-your modules flask code.
-
-Similarly, you should include the line:
-
-```
-{% if not g.standalone %}{% extends "base.html" %}{% endif %}
-```
-
-in all of your templates to pull in the header/footer from the core package
-when not running as a standalone app.  Then, in your standalone bootup
-section (usually in `__init__.py`), you should have the following:
-
-```python
-@app.before_request
-def set_standalone():
-    g.standalone = True
-```
-
-### Front End
-
-[Vue.js](https://vuejs.org/) will be used on the front end for HTML
-templating and for working with the DOM. (The current Flask/Jinja
-templates will be moved to Vue templates/components.) The Flask server
-will send JSON data to be rendered into pages by Vue. One advantage of
-this decoupled approach is it is easier to test the server in isolation
-from the client, and vice-versa (by using mock JSON data). Further details
-are TBD but one possibility would be to take a
-['single-page-app'](https://en.wikipedia.org/wiki/Single-page_application)
-approach.
-
-The submodule services that LibreHQ provides (wiki, chat, etc.) will be
-separate from the main LibreHQ (Vue-based) UI. There won't be a Vue wrapper
-page that loads a wiki in an iframe or anything like that. There will be UI
-for managing a wiki in the LibreHQ app, but when you open the wiki it will
-look like a regular vanilla wiki, and there won't be anything Vue-rendered
-on the page, no LibreHQ header, footer, etc.
-
-LibreHQ will use [npm](https://www.npmjs.com/) to manage Vue and other
-front-end dependencies.
+The template files for a service that are served by Flask are generated
+by the Vue.js front end compile step. For example, a `wikis.html` file
+is generated in `librehq/templates` where Flask looks for it. These
+files are served by Flask as-is, without any data added to them, so
+they're not really functioning as templates.  Rather, data is fetched
+by a separate request to the server and added to the page by Vue.js.
 
 ### Outstanding questions
 
@@ -151,3 +108,24 @@ Some outstanding questions to be determined via development:
   when templating is moved to Vue.js? How? Would each submodule provide a
   Vue component that's rendered in the main dashboard? This would mean
   each submodule would have its own npm-managed front-end dependencies?
+
+## Front End
+
+[Vue.js](https://vuejs.org/) will be used on the front end for HTML
+templating and for working with the DOM.  The Flask server will send
+JSON data to be rendered into pages by Vue. One advantage of
+this decoupled approach is it is easier to test the server in isolation
+from the client, and vice-versa (by using mock JSON data). Further details
+are TBD but one possibility would be to take a
+['single-page-app'](https://en.wikipedia.org/wiki/Single-page_application)
+approach.
+
+From a user's perspective, the services that LibreHQ provides (wiki, chat,
+etc.) will generally be separate from the LibreHQ UI. E.g. there will be a
+LibreHQ UI for managing a wiki in the LibreHQ app, but when you visit the
+wiki it will look like a regular vanilla wiki, and there won't be anything
+Vue-rendered on the wiki pages, no LibreHQ header, footer, etc.
+
+LibreHQ will use [npm](https://www.npmjs.com/) to manage Vue and other
+front-end dependencies.
+
