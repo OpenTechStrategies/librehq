@@ -77,24 +77,13 @@ forward from the old username for up to some predetermined amount of
 time -- but at least we can set things up so that this is a policy
 decision rather than a technical constraint.
 
-## Modules
+## Service Modules
 
-Each LibreHQ service gets its own repository, in order to keep the
-development lifecycle of each codebase separate.  They are imported
-into LibreHQ-core via git submodules, and expose their functionality
-through partials and flask blueprints.  Some conventions:
+Each LibreHQ service is a Python module in its own directory. Some
+conventions:
 
-* The repository name is `librehq-<service>`, with the directory for
-  the git submodule to be just `<service>`
-* Only merge submodule sha changes to librehq-core when stable, and
-  collapse so that only one sha update is done
-* Submodule sha updates should live in their own commits
-* The service should be bootable on its own, via flask
-* The service should expose a `from service import bp` which represents
-  the Blueprint for that submodule
-* The Blueprint should use as a base `"/<service>/"` for web requets
-* The service should expose a `main_partial()` that returns a template
-  to be imported into the main section
+* The directory for the service will be just `<service>` (e.g. 'wikis')
+* The service should use as a base `"/<service>/"` for web requests
 
 ### Templates
 
