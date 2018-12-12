@@ -19,3 +19,9 @@ demo servers. May have changes/features that aren't in production yet.
 - __production__: The stable code that is 'officially released' for use
 in production installations/servers.
 
+## Third Party Libraries
+
+JS and CSS third party libraries loaded by the LibreHQ app should be served
+from our servers, rather than from elsewhere like a CDN (Content Delivery
+Network). The versions of these libraries that we use should be committed
+and tracked by git. The reasons for this include consistency and security.
