@@ -151,23 +151,6 @@ on the page, no LibreHQ header, footer, etc.
 LibreHQ will use [npm](https://www.npmjs.com/) to manage Vue and other
 front-end dependencies.
 
-### Git Branches
-
-In addition to short-lived 'feature' branches where work on particular
-issues is done, there will be several long-lived git branches for
-various purposes. Basically changes will work their way from the top of
-this list to the bottom.
-
-- __mvp-dev__: Contains work on the initial
-'minimum viable product'. Feature branches are merged into this branch
-during initial mvp phase. Will not be needed after mvp phase is done.
-- __master__: Has the latest code that has been tested and reviewed.
-(Changes are reviewed via PR before landing on master.)
-- __testing__ and/or __demo__: Code that is loaded on testing and/or
-demo servers. May have changes/features that aren't in production yet.
-- __production__: The stable code that is 'officially released' for use
-in production installations/servers.
-
 ### Outstanding questions
 
 Some outstanding questions to be determined via development:
