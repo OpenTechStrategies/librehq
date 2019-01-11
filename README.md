@@ -76,15 +76,6 @@ Run flask-migrate migrations
 FLASK_APP=librehq pipenv run flask db upgrade
 ```
 
-Then run flask-migrate for each of the services.  We do it this way so each
-service can handle its own database setup.
-
-```ShellSession
-for service in wikis ; do
-  (cd $service ; FLASK_APP=$service pipenv run flask db upgrade)
-done
-```
-
 ## Front End: Dependencies
 
 LibreHQ uses [npm](https://www.npmjs.com/package/npm) to manage front end
