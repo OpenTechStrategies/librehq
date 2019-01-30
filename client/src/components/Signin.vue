@@ -3,7 +3,7 @@
     <div class="container">
       <div class="columns">
 
-        <div class="column">
+        <div class="column is-4 is-offset-1">
           <h1 class="title">
             LibreHQ <em>beta</em>
           </h1>
@@ -18,9 +18,7 @@
           </p>
         </div>
 
-        <div class="column"></div>
-
-        <div class="column">
+        <div class="column is-4 is-offset-2">
           <div class="tabs is-large is-boxed is-fullwidth">
             <ul>
               <li v-bind:class="signUp && 'is-active'">
