@@ -9,7 +9,7 @@
       <div class="container">
         <div class="columns">
           <div
-            class="column"
+            class="column is-4"
             v-for="wiki of wikis"
             v-bind:key="wiki.id"
           >
@@ -117,38 +117,12 @@
             </div>
           </div>
 
-          <div class="column">
+          <div class="column is-4">
             <h2 class="title is-4">Create a Wiki</h2>
-            <form action="createwiki" method="post">
-              <div class="field">
-                <label class="label">Wiki Name</label>
-                <div class="control">
-                  <input
-                    class="input"
-                    type="text"
-                    name="name"
-                    placeholder="Wiki Name"
-                  >
-                </div>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <input
-                    class="button is-link"
-                    type="submit"
-                    value="Create Wiki"
-                  >
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div class="column">
-            <h2 class="title is-4">Create a Wiki from CSV Data</h2>
             <form
-              action="uploadcsv"
+              v-bind:action="createWikiFromCsv ? 'uploadcsv' : 'createwiki'"
               method="post"
-              enctype="multipart/form-data"
+              v-bind:enctype="createWikiFromCsv && 'multipart/form-data'"
             >
               <div class="field">
                 <label class="label">Wiki Name</label>
@@ -162,12 +136,21 @@
                 </div>
               </div>
               <div class="field">
+                <label class="checkbox">
+                  <input
+                    type="checkbox"
+                    v-model="createWikiFromCsv"
+                  />
+                  Populate the Wiki with CSV Data
+                </label>
+              </div>
+              <div class="field" v-if="createWikiFromCsv">
                 <FileUploadInput
                   inputLabel="Choose a CSV file…"
                   inputName="csv"
                 />
               </div>
-              <div class="field">
+              <div class="field" v-if="createWikiFromCsv">
                 <FileUploadInput
                   inputLabel="Choose a Config file…"
                   inputName="config"
@@ -178,13 +161,12 @@
                   <input
                     class="button is-link"
                     type="submit"
-                    value="Create Wiki from CSV Data"
+                    v-bind:value="createWikiFromCsv ? 'Create Wiki from CSV Data' : 'Create Wiki'"
                   >
                 </div>
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </section>
@@ -202,7 +184,8 @@ export default {
   },
   data() {
     return {
-      wikis: []
+      wikis: [],
+      createWikiFromCsv: false
     };
   },
   methods: {
