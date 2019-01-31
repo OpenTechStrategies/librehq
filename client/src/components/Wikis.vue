@@ -118,7 +118,7 @@
           </div>
 
           <div class="column is-4">
-            <h2 class="title is-4">Create a Wiki</h2>
+            <h2 class="title is-4">Create a New Wiki</h2>
             <form
               v-bind:action="createWikiFromCsv ? 'uploadcsv' : 'createwiki'"
               method="post"
@@ -141,7 +141,7 @@
                     type="checkbox"
                     v-model="createWikiFromCsv"
                   />
-                  Populate the Wiki with CSV Data
+                  Populate the New Wiki with CSV Data
                 </label>
               </div>
               <!--
@@ -183,10 +183,10 @@
               <div class="field" v-if="createWikiFromCsv && useConfigForm">
                 <label class="label">Page Section Layout</label>
                 <div class="field">
-                  Each wiki page corresponds to a row in the CSV. The
-                  "Page Section Layout" shows the common structure for the
-                  pages: what the section nesting is, and which
-                  columns go in which sections in what order.
+                  Each row in the CSV file becomes a page in the wiki. The
+                  "Page Section Layout" specifies the common structure for the
+                  pages: what the page sections are, how they are nested, and
+                  which columns in the CSV go into which page sections.
                   Each line has one of two forms:
                </div>
                <div class="field">
@@ -227,9 +227,9 @@
                   a row are substituted in order to create the title of
                   the page generated from that row. Columns are specified
                   with "{N}" in the string, where N is a column number.
-                  The special column {0} is the CSV row number,
-                  which is automatically left-padded with zeros
-                  appropriately for the total number of rows.
+                  The special column "{0}" is the CSV row number
+                  (which is automatically left-padded with zeros
+                  appropriately for the total number of rows).
                 </div>
                 <div class="control">
                   <input
@@ -283,7 +283,7 @@
                   <input
                     class="button is-link"
                     type="submit"
-                    v-bind:value="createWikiFromCsv ? 'Create Wiki from CSV Data' : 'Create Wiki'"
+                    v-bind:value="createWikiFromCsv ? 'Create New Wiki from CSV Data' : 'Create New Wiki'"
                   >
                 </div>
               </div>
