@@ -25,7 +25,7 @@
                 <a @click="showSignUp">Sign Up</a>
               </li>
               <li v-bind:class="!signUp && 'is-active'">
-                <a @click="showSignIn">Sign In</a>
+                <a @click="showLogIn">Log In</a>
               </li>
             </ul>
           </div>
@@ -72,7 +72,7 @@
                 <input
                   class="button is-link"
                   type="submit"
-                  v-bind:value="signUp ? 'Sign Up' : 'Sign In'"
+                  v-bind:value="signUp ? 'Sign Up' : 'Log In'"
                 >
               </div>
             </div>
@@ -97,7 +97,7 @@ export default {
     showSignUp() {
       this.signUp = true;
     },
-    showSignIn() {
+    showLogIn() {
       this.signUp = false;
     }
   }
