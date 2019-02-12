@@ -100,6 +100,12 @@ We include an `mwiki-default.conf.tmpl` in this directory.  You will need to cop
     $ cp mwiki-default.conf.tmpl mwiki-default.conf
     # Edit ServerName to be whatever you want to call your host
 
+Similarly for a farms.yml.tmpl in the mediawikifarmdocs directory
+
+    $ cp mediawikifarmdocs/farms.yml.tmpl mediawikifarmdocs/farms.yml
+    # Edit to provide a server name (make same as in config.py in top level
+    # directory to ensure things work with the main webserver)
+
 If you know what changes you want to make to your Apache configuration
 (e.g. adding SSL), you can make those here.  You will at least need
 to fill in the Server Name.
