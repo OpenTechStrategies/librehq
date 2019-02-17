@@ -1,4 +1,4 @@
-from flask import (Flask, render_template)
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
@@ -27,10 +27,6 @@ app.config["SECRET_KEY"] = "dev"
 app.config["SECURITY_PASSWORD_SALT"] = "salt"
 mail = Mail(app)
 
-# To let submodules render templates located here in librehq-core.
-def render_template_in_core(template, **context):
-    return render_template(template, **context)
-
 from librehq import main
 from librehq import account
 
@@ -39,7 +35,7 @@ import wikis
 app.register_blueprint(main.bp);
 app.register_blueprint(account.bp);
 
-wikis.initialize_module(app, db)
+wikis.initialize_service(app, db)
 
 if __name__ == "__librehq__":
     app.run(host='0.0.0.0')
