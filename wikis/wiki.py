@@ -18,14 +18,14 @@ def create_wiki():
     wiki_db_name = "librehq_wikis_" + str(new_wiki.id)
 
     # Let this error if the script isn't here, since we're in prototype mode
-    # TODO: Replace by ansible call
     session.get("account_username")
     subprocess.call([
-        'addWiki.sh',
-        request.form["name"],
-        wiki_db_name,
-        session.get("account_username"),
-        session.get("account_password")
+        'ansible-playbook',
+        'wikis/ansible/mediawiki-add-wiki.yml',
+        '-e', 'wiki_name=' + request.form["name"],
+        '-e', 'wiki_db=' + wiki_db_name,
+        '-e', 'wiki_username=' + session.get("account_username"),
+        '-e', 'wiki_password=' + session.get("account_password")
     ])
 
 @bp.route('')
@@ -63,8 +63,12 @@ def delete_wiki():
     db.session.delete(wiki)
     db.session.commit()
 
-    # TODO: Replace by ansible call
-    subprocess.call(['deleteWiki.sh', wiki.wikiname, wiki_db_name])
+    subprocess.call([
+        'ansible-playbook',
+        'wikis/ansible/mediawiki-delete-wiki.yml',
+        '-e', 'wiki_name=' + wiki.wikiname,
+        '-e', 'wiki_db=' + wiki_db_name
+    ])
 
     return redirect(url_for(".dashboard"))
 
@@ -79,8 +83,12 @@ def rename_wiki():
     db.session.add(wiki)
     db.session.commit()
 
-    # TODO: Replace by ansible call
-    subprocess.call(['renameWiki.sh', old_wiki_name, new_wiki_name])
+    subprocess.call([
+        'ansible-playbook',
+        'wikis/ansible/mediawiki-rename-wiki.yml',
+        '-e', 'wiki_name_old=' + old_wiki_name,
+        '-e', 'wiki_name_new=' + new_wiki_name
+    ])
 
     return redirect(url_for(".dashboard"))
 
