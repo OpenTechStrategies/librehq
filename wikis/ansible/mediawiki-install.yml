@@ -77,20 +77,12 @@
       owner: wiki
       group: wiki
 
-  - name: Create first database
-    mysql_db:
-      name: wikidb1
-
-  - name: Create second database
-    mysql_db:
-      name: wikidb2
-
-  - name: Create database user and grant privileges
+  - name: Create database user
     mysql_user:
       name: wikiuser
       password: "{{ wikiuser_db_pass }}"
       state: present
-      priv: "wikidb1.*:ALL/wikidb2.*:ALL"
+      priv: "*.*:USAGE"
 
   - name: Enable PHP modules
     shell: phpenmod {{ item }}
@@ -157,7 +149,6 @@
     command: composer install --no-dev
     args:
       chdir: /home/wiki/mediawikifarm
-      
 
   - name: Edit ConfigDir
     become: true
@@ -183,23 +174,6 @@
     with_items:
       - mediawikifarmdocs/farms.yml  
       - mediawikifarmdocs/versions.yml
-      - mediawikifarmdocs/test1.yml
-      - mediawikifarmdocs/test2.yml
-
-  # Initialize wikis
-  - name: Create wiki 1
-    become: true
-    become_user: wiki
-    command: php mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbpass="{{ wikiuser_db_pass }}" --dbname=wikidb1 --lang=en --pass=mdpwiki8 "Wiki Test 1" "test"
-    args:
-      chdir: /home/wiki
-
-  - name: Create wiki 2
-    become: true
-    become_user: wiki
-    command: php mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbname=wikidb2 --dbpass="{{ wikiuser_db_pass }}" --lang=en --pass=mdpwiki8 "Wiki Test 2" "test"
-    args:
-      chdir: /home/wiki
 
   # Handle Apache changes
   - name: Symlink to webserver directory

@@ -1,0 +1,52 @@
+# This should be run after mediawiki-install is run somewhere.
+# Not quite sure how to check that it has been run, but this
+# should fail spectaculary if it's not.
+#
+# It needs to be run with command line arguments specifying
+# the name and whatnot.  For instance:
+#
+# ansible-playbook --extra-vars "wiki_name=test1 wiki_db=wikidb1 wiki_username=user wiki_password=pass" mediawiki-add-wiki.yml
+
+- hosts: mediawiki
+  remote_user: root
+  tasks:
+
+  - name: Include variables for install script
+    include_vars:
+      dir: mediawiki_vars
+      ignore_files: [vault.yml.tmpl]
+      extensions: [yml]
+
+  - name: Create database
+    mysql_db:
+      name: "{{ wiki_db }}"
+
+  - name: Add database priveleges
+    mysql_user:
+      name: wikiuser
+      state: present
+      append_privs: true
+      priv: "{{ wiki_db }}.*:ALL"
+
+  # Initialize wikis
+  - name: Create wiki
+    become: true
+    become_user: wiki
+    command: "php mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbpass=\"{{ wikiuser_db_pass }}\" --dbname={{ wiki_db }} --lang=en --pass=\"{{ wiki_password }}\" \"{{ wiki_name }}\" \"{{ wiki_username }}\""
+    args:
+      chdir: /home/wiki
+
+  - name: Add wikifarm config file
+    become: true
+    become_user: wiki
+    template:
+      src: mediawikifarmdocs/wiki.yml.j2
+      dest: "/home/wiki/mediawiki-1.31.1/{{ wiki_name }}.yml"
+
+  - name: Add wiki listing to versions
+    become: true
+    become_user: wiki
+    lineinfile:
+      path: /home/wiki/mediawiki-1.31.1/versions.yml
+      line: "{{ wiki_name }}: mediawiki-1.31.1"
+      insertafter: EOF
