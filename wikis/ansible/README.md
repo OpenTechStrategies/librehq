@@ -116,14 +116,32 @@ Our configuration for multiple wikis is currently closely based on
 the documentation in
 [MEDIAWIKI_INSTALL.md](https://github.com/OpenTechStrategies/librehq-wikis/blob/master/MEDIAWIKI_INSTALL.md).
 
-To use the mediawiki farm parts of this Ansible playbook, you will need
-to add the database password to `test1.yml` and `test2.yml`.
+### Adding a wiki
 
-    $ cp mediawikifarmdocs/test1.yml.tmpl mediawikifarmdocs/test1.yml
-    # Edit database password to match the one you entered in your vault
+To add a wiki to the farm, run the add-wiki playbook
 
+```
+    $ ansible-playbook --extra-vars "wiki_name=<NAME> wiki_db=<DB> wiki_username=<USERNAME> wiki_password=<USERPASS>" mediawiki-add-wiki.yml
+```
+
+In order to use the fault passwords, follow the same instructions as above.
+
+### Removing a wiki
+
+Similarly, run the delete-wiki playbook
+
+```
+    $ ansible-playbook --extra-vars "wiki_name=<NAME> wiki_db=<DB>" mediawiki-delete-wiki.yml
+```
 
 ## Local testing
+
+NOTE: As of 2019/02/17, this has not been tested after changes were made!
+Vagrant was not playing well with AWS, so it was changed to be an install
+on the AWS box directly.  This part should be rewritten there is more time
+to test and update for ansible running!
+
+-----
 
 Locally, Ansible works well with Vagrant.
 
