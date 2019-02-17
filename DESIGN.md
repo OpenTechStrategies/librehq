@@ -38,6 +38,15 @@ to approve the transfer.
 
 ## Services and URLs
 
+For clear communication, we'll specify some terminology for services
+and their sub-parts.  A given 'service' includes both an 'upstream
+package' (e.g. MediaWiki), and a 'service wrapper', which is our
+LibreHQ code for managing and working with the 'upstream package'.
+
+Service wrapper code is written in Python (and JavaScript for
+UI/front end), regardless of the language of the upstream package
+(e.g. PHP).
+
 To create an account, start at `https://librehq.com/`.  Afterwards
 you'll have a landing page at `https://librehq.com/USER` that lists
 all the services available and which ones are active (remember, in the
@@ -68,105 +77,22 @@ forward from the old username for up to some predetermined amount of
 time -- but at least we can set things up so that this is a policy
 decision rather than a technical constraint.
 
-## Modules
+## Service Modules
 
-Each LibreHQ service gets its own repository, in order to keep the
-development lifecycle of each codebase separate.  They are imported
-into LibreHQ-core via git submodules, and expose their functionality
-through partials and flask blueprints.  Some conventions:
+Each LibreHQ service is a Python module in its own directory. Some
+conventions:
 
-* The repository name is `librehq-<service>`, with the directory for
-  the git submodule to be just `<service>`
-* Only merge submodule sha changes to librehq-core when stable, and
-  collapse so that only one sha update is done
-* Submodule sha updates should live in their own commits
-* The service should be bootable on its own, via flask
-* The service should expose a `from service import bp` which represents
-  the Blueprint for that submodule
-* The Blueprint should use as a base `"/<service>/"` for web requets
-* The service should expose a `main_partial()` that returns a template
-  to be imported into the main section
+* The directory for the service will be just `<service>` (e.g. 'wikis')
+* The service should use as a base `"/<service>/"` for web requests
 
-### Templates
+### Service Templates
 
-_Note: this section will need to be updated once templates are moved to
-Vue.js, see 'Front End' section below._
-
-When designing module pages, all of the templates should be in the
-`templates/<modulename>/` subdirectory to prevent confusion in the top
-level directory.  For instance, if you have `templates/dashboard.html`,
-in your module, when running as part of the larger librehq site, the main
-core `templates/dashboard.html` will get chosen for rendering, even if
-called from the module Blueprint.  So, you need to have (for example)
-`templates/wikis/dashboard.html` and reference `wikis/dashboard.html` in
-your modules flask code.
-
-Similarly, you should include the line:
-
-```
-{% if not g.standalone %}{% extends "base.html" %}{% endif %}
-```
-
-in all of your templates to pull in the header/footer from the core package
-when not running as a standalone app.  Then, in your standalone bootup
-section (usually in `__init__.py`), you should have the following:
-
-```python
-@app.before_request
-def set_standalone():
-    g.standalone = True
-```
-
-### Third Party Libraries
-
-JS and CSS third party libraries loaded by the LibreHQ app should be served
-from our servers, rather than from elsewhere like a CDN (Content Delivery
-Network). The versions of these libraries that we use should be committed
-and tracked by git. The reasons for this include consistency and security.
-
-For minified versions of these libraries (i.e. bulma.css and bulma.min.css),
-both versions should be present in the repo and also on our servers, so that
-anyone can just remove the 'min' from the URL to see the non-minified
-source code.
-
-### Front End
-
-[Vue.js](https://vuejs.org/) will be used on the front end for HTML
-templating and for working with the DOM. (The current Flask/Jinja
-templates will be moved to Vue templates/components.) The Flask server
-will send JSON data to be rendered into pages by Vue. One advantage of
-this decoupled approach is it is easier to test the server in isolation
-from the client, and vice-versa (by using mock JSON data). Further details
-are TBD but one possibility would be to take a
-['single-page-app'](https://en.wikipedia.org/wiki/Single-page_application)
-approach.
-
-The submodule services that LibreHQ provides (wiki, chat, etc.) will be
-separate from the main LibreHQ (Vue-based) UI. There won't be a Vue wrapper
-page that loads a wiki in an iframe or anything like that. There will be UI
-for managing a wiki in the LibreHQ app, but when you open the wiki it will
-look like a regular vanilla wiki, and there won't be anything Vue-rendered
-on the page, no LibreHQ header, footer, etc.
-
-LibreHQ will use [npm](https://www.npmjs.com/) to manage Vue and other
-front-end dependencies.
-
-### Git Branches
-
-In addition to short-lived 'feature' branches where work on particular
-issues is done, there will be several long-lived git branches for
-various purposes. Basically changes will work their way from the top of
-this list to the bottom.
-
-- __mvp-dev__: Contains work on the initial
-'minimum viable product'. Feature branches are merged into this branch
-during initial mvp phase. Will not be needed after mvp phase is done.
-- __master__: Has the latest code that has been tested and reviewed.
-(Changes are reviewed via PR before landing on master.)
-- __testing__ and/or __demo__: Code that is loaded on testing and/or
-demo servers. May have changes/features that aren't in production yet.
-- __production__: The stable code that is 'officially released' for use
-in production installations/servers.
+The template files for a service that are served by Flask are generated
+by the Vue.js front end compile step. For example, a `wikis.html` file
+is generated in `librehq/templates` where Flask looks for it. These
+files are served by Flask as-is, without any data added to them, so
+they're not really functioning as templates.  Rather, data is fetched
+by a separate request to the server and added to the page by Vue.js.
 
 ### Outstanding questions
 
@@ -176,9 +102,25 @@ Some outstanding questions to be determined via development:
   service they provide, or should they adhere to a greater librehq
   design?
 * What level of functionality should be exposed in the main dashboard
-  through `main_partial`
-* Currently submodules provide the UI/templates for their management,
-  which are displayed within the main dashboard. Will they still do this
-  when templating is moved to Vue.js? How? Would each submodule provide a
-  Vue component that's rendered in the main dashboard? This would mean
-  each submodule would have its own npm-managed front-end dependencies?
+  for each service?
+
+## Front End
+
+[Vue.js](https://vuejs.org/) will be used on the front end for HTML
+templating and for working with the DOM.  The Flask server will send
+JSON data to be rendered into pages by Vue. One advantage of
+this decoupled approach is it is easier to test the server in isolation
+from the client, and vice-versa (by using mock JSON data). Further details
+are TBD but one possibility would be to take a
+['single-page-app'](https://en.wikipedia.org/wiki/Single-page_application)
+approach.
+
+From a user's perspective, the services that LibreHQ provides (wiki, chat,
+etc.) will generally be separate from the LibreHQ UI. E.g. there will be a
+LibreHQ UI for managing a wiki in the LibreHQ app, but when you visit the
+wiki it will look like a regular vanilla wiki, and there won't be anything
+Vue-rendered on the wiki pages, no LibreHQ header, footer, etc.
+
+LibreHQ will use [npm](https://www.npmjs.com/) to manage Vue and other
+front-end dependencies.
+
