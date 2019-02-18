@@ -63,6 +63,10 @@ example.com : ok=2    changed=1    unreachable=0    failed=0
 
 ## Encrypt secrets
 
+__Note as of February 18, 2019: Currently the python codebase does not know
+about ansible secrets, nor how to unlock them correctly, so you should not
+encrypt the secrets file at this time!__
+
 Most likely, you'll need to encrypt some secrets.  For example, in this
 playbook we encrypt the database password.
 
