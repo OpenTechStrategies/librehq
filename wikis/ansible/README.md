@@ -108,7 +108,7 @@ to fill in the Server Name.
 
 Our configuration for multiple wikis is currently closely based on
 the documentation in
-[MEDIAWIKI_INSTALL.md](https://github.com/OpenTechStrategies/librehq-wikis/blob/mvp-dev/MEDIAWIKI_INSTALL.md).
+[MEDIAWIKI_INSTALL.md](https://github.com/OpenTechStrategies/librehq-wikis/blob/master/MEDIAWIKI_INSTALL.md).
 
 To use the mediawiki farm parts of this Ansible playbook, you will need
 to add the database password to `test1.yml` and `test2.yml`.
