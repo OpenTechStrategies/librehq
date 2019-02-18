@@ -138,6 +138,13 @@ $ python -m smtpd -n -c DebuggingServer localhost:1025
 This is required in order to use certain parts of the site, and not having it
 running may result in errors.
 
+## Backend: Setting up mediawiki
+
+Mediawiki and MediawikiFarm are set up via the wikis subproject.  Read
+wikis/ansible/README.md to set up.  You will need to ensure that the wikis
+created in that farm are accessible via \<wiki\_name\>.\<WIKI\_URL\> (which
+is set up in the config.py)
+
 ## Booting the application
 
 Start the application by running flask from the project directory:

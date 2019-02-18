@@ -9,7 +9,7 @@
 # for general help with Ansible.
 
 ---
-- hosts: default ansible_host=127.0.0.1 ansible_port=2222 ansible_user='vagrant' ansible_ssh_private_key_file='~/.ssh/vagrant-insecure'
+- hosts: mediawiki
   remote_user: root
   tasks:
 
@@ -77,20 +77,12 @@
       owner: wiki
       group: wiki
 
-  - name: Create first database
-    mysql_db:
-      name: wikidb1
-
-  - name: Create second database
-    mysql_db:
-      name: wikidb2
-
-  - name: Create database user and grant privileges
+  - name: Create database user
     mysql_user:
       name: wikiuser
-      login_password: "{{ wikiuser_db_pass }}"
+      password: "{{ wikiuser_db_pass }}"
       state: present
-      priv: "wikidb1.*:ALL/wikidb2.*:ALL"
+      priv: "*.*:USAGE"
 
   - name: Enable PHP modules
     shell: phpenmod {{ item }}
@@ -105,7 +97,7 @@
     get_url:
       url: https://getcomposer.org/installer
       dest: /home/wiki/composer-setup.php
-      checksum: "sha384:93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8"
+      checksum: "sha384:48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5"
 
   - name: Make wiki bin directory
     become: true
@@ -157,7 +149,6 @@
     command: composer install --no-dev
     args:
       chdir: /home/wiki/mediawikifarm
-      
 
   - name: Edit ConfigDir
     become: true
@@ -183,23 +174,6 @@
     with_items:
       - mediawikifarmdocs/farms.yml  
       - mediawikifarmdocs/versions.yml
-      - mediawikifarmdocs/test1.yml
-      - mediawikifarmdocs/test2.yml
-
-  # Initialize wikis
-  - name: Create wiki 1
-    become: true
-    become_user: wiki
-    command: php mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbpassword="{{ wikiuser_db_pass }}" --dbname=wikidb1 --lang=en --pass=mdpwiki8 "Wiki Test 1" "test"
-    args:
-      chdir: /home/wiki
-
-  - name: Create wiki 2
-    become: true
-    become_user: wiki
-    command: php mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbname=wikidb2 --dbpassword="{{ wikiuser_db_pass }}" --lang=en --pass=mdpwiki8 "Wiki Test 2" "test"
-    args:
-      chdir: /home/wiki
 
   # Handle Apache changes
   - name: Symlink to webserver directory
@@ -207,7 +181,7 @@
       state: link
       owner: www-data
       group: www-data
-      src: /home/wiki/mediawiki-1.31.1
+      src: /home/wiki/mediawikifarm/www
       path: /var/www/mediawiki
 
   - name: Enable SSL on the webserver

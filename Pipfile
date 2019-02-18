@@ -8,7 +8,7 @@ name = "pypi"
 [packages]
 
 flask = "*"
-"csv2wiki" = {git = "https://github.com/OpenTechStrategies/csv2wiki", editable = true, ref = "module-ize"}
+"csv2wiki" = {git = "https://github.com/OpenTechStrategies/csv2wiki", editable = true, ref = "af3b784f420e395e7685b81c97349a95ea2470ff"}
 flask-migrate = "*"
 "psycopg2" = "*"
 flask-mail = "*"
