@@ -1,6 +1,6 @@
 from io import StringIO
 from flask import (
-    Blueprint, redirect, render_template, request, session, url_for, jsonify
+    Blueprint, redirect, render_template, request, session, url_for, jsonify, current_app
 )
 
 import csv2wiki, subprocess
@@ -40,7 +40,7 @@ def wiki_data():
     wikisdata = map(lambda w: {
         "wikiname": w.wikiname,
         "id": w.id,
-        "url": "http://" + w.wikiname + ".otswiki.net"
+        "url": "http://" + w.wikiname + "." + current_app.config.get("WIKI_URL")
     }, wikis)
     return jsonify(list(wikisdata))
 
@@ -51,7 +51,9 @@ def create_plain():
 
     return ("<a href='http://" +
         request.form["name"] +
-        ".otswiki.net'>New wiki: " +
+        "." +
+        current_app.config.get("WIKI_URL") +
+        "'>New wiki: " +
         request.form["name"] + "</a>")
 
 @bp.route('deletewiki', methods=(["POST"]))
@@ -105,7 +107,7 @@ def create_with_csv():
     config = csv2wiki.parse_config_string(request.files["config"].read().decode("utf-8"))
 
     # Override config options with our known parameters
-    config["wiki_url"] = "http://" + wikiname + ".otswiki.net/"
+    config["wiki_url"] = "http://" + wikiname + "." + current_app.config.get("WIKI_URL")
     # These are set in the addWiki.sh script, and should come from user federation later
     config["username"] = session.get("account_username")
     config["password"] = session.get("account_password")
@@ -117,7 +119,9 @@ def create_with_csv():
     return ("<pre>" + output.getvalue() + "</pre>" +
             "<a href='http://" +
             wikiname +
-            ".otswiki.net'>New wiki: " +
+            "." +
+            current_app.config.get("WIKI_URL") +
+            "'>New wiki: " +
             wikiname + "</a>")
 
 class Wiki(db.Model):
