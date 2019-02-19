@@ -27,5 +27,10 @@ module.exports = {
       filename: "wikis.html",
       title: "Wikis | LibreHQ beta"
     }
+  },
+  publicPath: "/client/",
+  devServer: {
+    host: '0.0.0.0',
+    disableHostCheck: true
   }
 };
