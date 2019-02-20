@@ -104,7 +104,14 @@ def create_with_csv():
         wiki = Wiki.query.get(request.form["wiki_id"])
         wikiname = wiki.wikiname
 
-    config = csv2wiki.parse_config_string(request.files["config"].read().decode("utf-8"))
+    if "yesUseConfigForm" == request.form["configuration"]:
+        config = {}
+        config["sec_map"] = request.form["pageSectionLayout"]
+        config["title_tmpl"] = request.form["pageTitleTemplate"]
+        config["toc_name"] = request.form["toc"]
+        config["cat_col"] = request.form["categoryColumn"]
+    else:
+        config = csv2wiki.parse_config_string(request.files["config"].read().decode("utf-8"))
 
     # Override config options with our known parameters
     config["wiki_url"] = "http://" + wikiname + "." + current_app.config.get("WIKI_URL")

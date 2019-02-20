@@ -124,7 +124,20 @@ $ npm run serve
 ```
 
 Then point your browser to URLs that include the `.html` extension, like
-`http://localhost:8080/dashboard.html`.
+`http://localhost:8080/client/dashboard.html`.  We use "/client/" here to allow
+you to run both the npm server, and the python server simultaneously and via
+a proxy pass configuration like the following, use them together:
+
+```
+  ProxyPass /client/ http://127.0.0.1:8080/client/
+  ProxyPassReverse /client/ http://127.0.0.1:8080/client/
+  ProxyPass / http://127.0.0.1:5000/
+  ProxyPassReverse / http://127.0.0.1:5000/
+```
+
+With this setup, going to \<servername\>/client/wikis.html will load the wiki data
+from the python server, allowing you to dynamically test your frontend code and
+backend code simultaneously
 
 ## Starting a mock mail server
 
