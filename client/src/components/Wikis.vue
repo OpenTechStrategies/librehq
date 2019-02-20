@@ -59,33 +59,35 @@
                     method="post"
                     enctype="multipart/form-data"
                   >
-                    <div class="field">
-                      <label
-                        class="label"
-                      >Populate Wiki with CSV Data</label>
-                      <input
-                        type="hidden"
-                        name="wiki_id"
-                        v-bind:value="wiki.id"
-                      />
-                      <FileUploadInput
-                        inputLabel="Choose a CSV file…"
-                        inputName="csv"
-                      />
+                    <div v-if="!wiki.createWikiFromCsv">
+                      <button
+                        class="button is-link"
+                        type="button"
+                        v-on:click="enableCsvPopulate(wiki)"
+                      >
+                        Populate Wiki with CSV Data
+                      </button>
                     </div>
-                    <div class="field">
-                      <FileUploadInput
-                        inputLabel="Choose a Config file…"
-                        inputName="config"
-                      />
-                    </div>
-                    <div class="field">
-                      <div class="control">
+                    <div v-if="wiki.createWikiFromCsv">
+                      <div class="field">
+                        <label
+                          class="label"
+                        >Populate Wiki with CSV Data</label>
                         <input
-                          class="button is-link"
-                          type="submit"
-                          value="Populate Wiki with CSV"
-                        >
+                          type="hidden"
+                          name="wiki_id"
+                          v-bind:value="wiki.id"
+                        />
+                      </div>
+                      <Csv2WikiImport />
+                      <div class="field">
+                        <div class="control">
+                          <input
+                            class="button is-link"
+                            type="submit"
+                            value="Populate Wiki with CSV"
+                          >
+                        </div>
                       </div>
                     </div>
                   </form>
@@ -173,13 +175,12 @@
 
 <script>
 import axios from "axios";
-import FileUploadInput from "./FileUploadInput.vue";
+import Vue from 'vue';
 import Csv2WikiImport from "./Csv2WikiImport.vue";
 
 export default {
   name: "Wikis",
   components: {
-    FileUploadInput,
     Csv2WikiImport
   },
   data() {
@@ -189,11 +190,15 @@ export default {
     };
   },
   methods: {
+    enableCsvPopulate(wiki) {
+      Vue.set(wiki, 'createWikiFromCsv', true)
+    },
     getWikisData() {
       axios
         .get("/wikis/wikisdata")
         .then(res => {
           this.wikis = res.data;
+          this.wikis.forEach(wiki => Vue.set(wiki, 'createWikiFromCsv', false));
         })
         .catch(error => {
           // eslint-disable-next-line
