@@ -16,3 +16,13 @@ db_password: __YOUR_DB_PW_HERE__
 # For instance, if your wiki hostname was librehq-wikis.com,
 # your machine would need to find test.wiki.librehq-wikis.com
 wiki_hostname: __YOUR_WIKI_HOSTNAME_HERE__
+
+# Directory to install all of the mediawiki needs
+# This must be an absolute path because of weirdness with unarchive
+mediawiki_install_directory: __ABSOLUTE_INSTALLATION_DIRECTORY__
+
+# The password for the wikiuser user for mysql.  This needs
+# to be propogated into the wikis submodule so that wikis
+# can be added/removed.  See installation instructions
+# for more information
+wikiuser_db_pass: __MEDIAWIKI_MYSQL_DB_PASS__

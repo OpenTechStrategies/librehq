@@ -1,0 +1,164 @@
+---
+- name: Add php repository
+  become: true
+  apt_repository:
+    repo: ppa:ondrej/php
+
+- name: install prerequisites
+  become: true
+  # See https://www.mediawiki.org/wiki/Manual:Installation_requirements
+  apt:
+    name: "{{ item }}"
+    #update_cache: yes # commented out for dev purposes
+    state: present
+  loop:
+    - apache2
+    - curl
+    - default-mysql-server
+    - default-mysql-client
+    - git
+    - php
+    - php-apcu
+    - php-cli
+    - php-intl
+    - php7.2-mbstring
+    - php7.3-mbstring
+    - php-mysql
+    - php7.3-mysqli
+    - php7.3-pgsql
+    - php7.2-xml
+    - php7.3-xml
+    - postgresql
+    - python-psycopg2
+    - python-mysqldb
+    - unzip
+
+- name: Setup installation directory
+  file:
+    path: "{{ mediawiki_install_directory }}"
+    state: directory
+
+- name: Download MediaWiki
+  get_url:
+    url: https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz
+    dest: "{{ mediawiki_install_directory }}/mediawiki-1.31.1.tar.gz"
+    checksum: sha256:ce5ad8a07c8ef6832448629d8bb56a19b2f73632ddde29b5af2c08192943a48f
+
+- name: Extract MediaWiki tarball
+  unarchive:
+    src: "{{ mediawiki_install_directory }}/mediawiki-1.31.1.tar.gz"
+    dest: "{{ mediawiki_install_directory }}/"
+    remote_src: yes
+
+- name: Create database user
+  become: true
+  mysql_user:
+    name: wikiuser
+    password: "{{ wikiuser_db_pass }}"
+    state: present
+    priv: "*.*:USAGE"
+
+- name: Enable PHP modules
+  become: true
+  shell: phpenmod {{ item }}
+  loop:
+    - mbstring
+    - mysqli
+    - xml
+
+- name: Get Composer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: "{{ mediawiki_install_directory }}/composer-setup.php"
+    checksum: "sha384:48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5"
+
+- name: Make wiki bin directory
+  file:
+    path: "{{ mediawiki_install_directory }}/bin"
+    state: directory
+
+- name: Make wiki conf directory
+  file:
+    path: "{{ mediawiki_install_directory }}/conf"
+    state: directory
+
+- name: Install Composer locally
+  shell: php {{ mediawiki_install_directory }}/composer-setup.php --install-dir={{ mediawiki_install_directory }}/bin --filename=composer
+
+- name: Remove Composer setup script
+  file:
+    path: "{{ mediawiki_install_directory }}/composer-setup.php"
+    state: absent
+
+- name: Install Composer globally
+  become: true
+  shell: mv {{ mediawiki_install_directory }}/bin/composer /usr/local/bin/composer      
+
+- name: Install MW with Composer
+  command: composer install --no-dev
+  args:
+    chdir: "{{ mediawiki_install_directory }}/mediawiki-1.31.1"
+
+# Add MediawikiFarm configuration
+
+# This is an attempt to keep this script idempotent
+- name: Remove MWFarm if it exists
+  file:
+    path: "{{ mediawiki_install_directory }}/mediawikifarm"
+    state: absent
+
+- name: Download MediawikiFarm
+  git:
+    dest: "{{ mediawiki_install_directory }}/mediawikifarm"
+    repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/MediaWikiFarm
+
+- name: Install MediawikiFarm
+  command: composer install --no-dev
+  args:
+    chdir: "{{ mediawiki_install_directory }}/mediawikifarm"
+
+- name: Edit ConfigDir
+  template:
+    src: MediaWikiFarmDirectories.php.j2
+    dest: "{{ mediawiki_install_directory }}/mediawikifarm/config/MediaWikiFarmDirectories.php"
+
+- name: Add farm configuration files
+  template:
+    src: farms.yml.j2
+    dest: "{{ mediawiki_install_directory }}/conf/farms.yml"
+
+- name: Ensure versions file exists
+  copy:
+    content: ""
+    dest: "{{ mediawiki_install_directory }}/conf/versions.yml"
+    force: no
+
+# Handle Apache changes
+- name: Symlink to webserver directory
+  become: true
+  file:
+    state: link
+    owner: www-data
+    group: www-data
+    src: "{{ mediawiki_install_directory }}/mediawikifarm/www"
+    path: /var/www/mediawiki
+
+- name: Enable SSL on the webserver
+  become: true
+  shell: a2enmod ssl
+
+- name: Send up MW config file
+  become: true
+  template:
+    src: mwiki-default.conf.j2
+    dest: /etc/apache2/sites-available/mwiki-default.conf
+
+- name: Enable MW site
+  become: true
+  shell: a2ensite mwiki-default.conf
+
+- name: Restart Apache
+  become: true
+  service:
+    name: apache2
+    state: restarted

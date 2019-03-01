@@ -13,3 +13,7 @@
 - hosts: librehq
   roles:
   - librehq
+
+- hosts: mediawiki
+  roles:
+  - mediawiki

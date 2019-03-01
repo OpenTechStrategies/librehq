@@ -2,7 +2,7 @@
   become: true
   apt:
     name: "{{ item }}"
-    #update_cache: yes  # Disabled for development speed
+    update_cache: yes
     state: present
   loop:
     - git
@@ -95,6 +95,11 @@
   template:
     src: config.py.j2
     dest: "{{ librehq_directory }}/config.py"
+
+- name: Copy wikis mediawiki configuration
+  template:
+    src: mwiki_vars.yml.j2
+    dest: "{{ librehq_directory }}/wikis/ansible/mediawiki_vars/vars.yml"
 
 - name: Run migrations
   shell: FLASK_APP=librehq FLASK_DEBUG=1 pipenv run flask db upgrade
