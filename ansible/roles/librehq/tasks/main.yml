@@ -6,13 +6,14 @@
     state: present
   loop:
     - git
-    - python3.6
+    - python3.7
     - python3-pip
     - postgresql
     - python-psycopg2
     - npm
     - apache2
     - ansible
+    - acl
 
 - name: Download librehq
   git:
@@ -41,7 +42,7 @@
     - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
 
 - name: Run pipenv install
-  command: "pipenv install --python 3.6 --dev"
+  command: "pipenv --python 3.7 install --dev"
   args:
     chdir: "{{ librehq_directory }}"
   when:
@@ -55,7 +56,6 @@
   become: true
   npm:
     name: "@vue/cli"
-    path: "{{ librehq_directory }}/client"
     global: yes
 
 - name: Build the client
@@ -100,6 +100,16 @@
   template:
     src: mwiki_vars.yml.j2
     dest: "{{ librehq_directory }}/wikis/ansible/mediawiki_vars/vars.yml"
+
+- name: Send up Apache LibreHQ config file
+  become: true
+  template:
+    src: librehq-default.conf.j2
+    dest: /etc/apache2/sites-available/librehq-default.conf
+
+- name: Enable MW site
+  become: true
+  shell: a2ensite librehq-default.conf
 
 - name: Run migrations
   shell: FLASK_APP=librehq FLASK_DEBUG=1 pipenv run flask db upgrade

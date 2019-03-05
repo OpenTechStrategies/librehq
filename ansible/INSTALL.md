@@ -117,3 +117,114 @@ along requests correctly:
 ```
 address=/.wiki.localdomain.tld/127.0.0.1
 ```
+
+# Using Vagrant
+
+If you would like to use vagrant to quickly boot up a version,
+it's straightforward with a few additional steps.
+
+First, set up your variables as documented above.
+
+Then, get vagrant:
+
+    $ sudo apt-get install vagrant
+    $ sudo apt-get install virtualbox
+
+Note that the [Vagrant
+documentation](https://www.vagrantup.com/docs/installation/) suggests
+_not_ using the version of Vagrant packaged by your operating system,
+but rather using the more complete and up-to-date versions they
+[provide](https://www.vagrantup.com/downloads.html).
+
+(2018/12/06: the version from the Vagrant website worked (2.2.2),
+but the one provided by Ubuntu 18.04 did not (2.0.2).)
+
+Either way, downloading may take a few minutes.  If you choose to
+download the `.deb` file, you can install it with `sudo dpkg -i
+/path/to/vagrant_2.2.1_x86_64.deb`.  Once installed, you can enter into
+the vagrant directory and run:
+
+    $ vagrant up
+
+You may get a persistent error like `default: Warning: Authentication
+failure. Retrying...`.  Check that the virtual machine is being created
+correctly in VirtualBox (you can look in the GUI to see if it appears
+and is running).  The quickest and simplest way to resolve this is by
+copying [the Vagrant default key
+files](https://github.com/hashicorp/vagrant/tree/master/keys) to your
+`.ssh` directory (on your host machine, not the new virtual guest
+machine).  The Vagrantfile assumes that this default private key is
+present at `~/.ssh/vagrant-insecure`, as noted in the line
+`config.ssh.private_key_path = "~/.ssh/vagrant-insecure"`. Make sure
+the default key files end in a newline (see this [bug
+report](https://github.com/hashicorp/vagrant/issues/10333)).
+
+If you need to test a clean build, you can clear the Vagrant virtual
+machine with `vagrant destroy`.  From there, just start again at
+`vagrant up` above.
+
+If all goes well, you'll see the two ansible scripts execute.
+
+## Additional needed steps
+
+In order to seamlessly use the vagrant server with on your local
+machine, there are three additional steps you need.
+
+### dnsmasq
+
+Firstly, you need to get a dnsserver running, easiest way is to
+follow the steps above in the dnsmasq section.  You'll need to
+have your local dns wildcard to your local machine as explained
+above.
+
+### Host Apache config
+
+Secondly, you need to ProxyPass apache for the dns server name
+you have to port 8080 using a configuration like the following:
+
+```
+<VirtualHost __SERVER_NAME__:80>
+
+  ServerName __SERVER_NAME__
+  ServerAlias *.__SERVER_NAME__
+
+  ProxyPreserveHost On
+  ProxyPass / http://127.0.0.1:8080/
+  ProxyPassReverse / http://127.0.0.1:8080/
+
+</VirtualHost>
+```
+
+The reason this is needed is because, for right now, mediawikifarm
+doesn't play well with ports being in the url name.  Not too much
+effort was gone into to figure out exactly why, but 500 errors were
+coming out.
+
+### Vagrant ansible hosts file
+
+In order to install wikis, ansible inside vagrant needs to find
+itself when looking for the [mediawiki] group.  The easiest way
+is to `vagrant ssh` when in the vagrant directory, and then
+add the following lines to /etc/ansible/hosts:
+
+```
+[mediawiki]
+localhost ansible_connection=local
+```
+
+## Checking LibreHQ in the browser
+
+When all is done, you should be able to load up `http://__SERVER_NAME__/`
+in your browser to see the interface
+
+## Looking at logs
+
+Two logfiles are created from the services running, flask.log and mailer.log,
+that can be viewed after using `vagrant ssh` to get into the box.  The latter
+is needed for the verification links.
+
+## Keeping vagrant up to date
+
+The easiest way to keep your vagrant server up to date is to reprovision it
+with `vagrant provision` after bringing your local checkout up to date with
+master (to get any new ansible tasks).

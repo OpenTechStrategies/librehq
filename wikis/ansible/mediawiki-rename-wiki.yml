@@ -7,10 +7,7 @@
   tasks:
 
   - name: Include variables for rename script
-    include_vars:
-      dir: mediawiki_vars
-      ignore_files: [vars.yml.tmpl]
-      extensions: [yml]
+    include_vars: mediawiki_vars/vars.yml
 
   - name: Move wiki config file to new name
     command: >
