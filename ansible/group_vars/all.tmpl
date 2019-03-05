@@ -1,0 +1,28 @@
+---
+
+# The source directory is specified because you may
+# already have it checked out if using development
+librehq_directory: __YOUR_SRC_DIR_HERE__
+
+# When we get to production, we will need to either use
+# ansible vaults, or just override on the command line
+# when provisioning.
+db_password: __YOUR_DB_PW_HERE__
+
+# This hostname is something that your machine can find
+# via dns for wiki population when using a wiki prefix.
+#  <wikiname>.wiki.<hostname>
+#
+# For instance, if your wiki hostname was librehq-wikis.com,
+# your machine would need to find test.wiki.librehq-wikis.com
+wiki_hostname: __YOUR_WIKI_HOSTNAME_HERE__
+
+# Directory to install all of the mediawiki needs
+# This must be an absolute path because of weirdness with unarchive
+mediawiki_install_directory: __ABSOLUTE_INSTALLATION_DIRECTORY__
+
+# The password for the wikiuser user for mysql.  This needs
+# to be propogated into the wikis submodule so that wikis
+# can be added/removed.  See installation instructions
+# for more information
+wikiuser_db_pass: __MEDIAWIKI_MYSQL_DB_PASS__

@@ -4,22 +4,20 @@
 # ansible-playbook --extra-vars "wiki_name_old=test1 wiki_name_new=test2" mediawiki-rename-wiki.yml
 
 - hosts: mediawiki
-  remote_user: root
   tasks:
 
+  - name: Include variables for rename script
+    include_vars: mediawiki_vars/vars.yml
+
   - name: Move wiki config file to new name
-    become: true
-    become_user: wiki
     command: >
-      creates="/home/wiki/mediawiki-1.31.1/{{ wiki_name_new }}.yml"
-      mv /home/wiki/mediawiki-1.31.1/{{ wiki_name_old }}.yml
-      /home/wiki/mediawiki-1.31.1/{{ wiki_name_new }}.yml
+      creates="{{ mediawiki_install_directory }}/conf/{{ wiki_name_new }}.yml"
+      mv {{ mediawiki_install_directory }}/conf/{{ wiki_name_old }}.yml
+      "{{ mediawiki_install_directory }}/conf/{{ wiki_name_new }}.yml"
 
   - name: Add wiki listing to versions
-    become: true
-    become_user: wiki
     lineinfile:
-      path: /home/wiki/mediawiki-1.31.1/versions.yml
+      path: "{{ mediawiki_install_directory }}/conf/versions.yml"
       regexp: "^{{ wiki_name_old }}: mediawiki-1.31.1"
       line: "{{ wiki_name_new }}: mediawiki-1.31.1"
       state: present

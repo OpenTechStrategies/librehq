@@ -4,31 +4,24 @@
 # ansible-playbook --extra-vars "wiki_name=test1 wiki_db=wikidb1" mediawiki-delete-wiki.yml
 
 - hosts: mediawiki
-  remote_user: root
   tasks:
 
-  - name: Include variables for install script
-    include_vars:
-      dir: mediawiki_vars
-      ignore_files: [vault.yml.tmpl]
-      extensions: [yml]
+  - name: Include variables for delete script
+    include_vars: mediawiki_vars/vars.yml
 
   - name: Drop database
+    become: true
     mysql_db:
       name: "{{ wiki_db }}"
       state: absent
 
   - name: Remove wikifarm config file
-    become: true
-    become_user: wiki
     file:
       state: absent
-      path: "/home/wiki/mediawiki-1.31.1/{{ wiki_name }}.yml"
+      path: "{{ mediawiki_install_directory }}/conf/{{ wiki_name }}.yml"
 
   - name: Remove wiki listing from versions
-    become: true
-    become_user: wiki
     lineinfile:
-      path: /home/wiki/mediawiki-1.31.1/versions.yml
+      path: "{{ mediawiki_install_directory }}/conf/versions.yml"
       line: "{{ wiki_name }}: mediawiki-1.31.1"
       state: absent

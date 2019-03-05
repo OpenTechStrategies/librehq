@@ -1,0 +1,8 @@
+<VirtualHost *:80>
+  ProxyPreserveHost On
+  ProxyPass / http://127.0.0.1:5000/
+  ProxyPassReverse / http://127.0.0.1:5000/
+  ServerName {{ wiki_hostname }}
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet

@@ -1,5 +1,5 @@
 myfarm:
-  server: '(?<wiki>[a-z0-9]+)\.__SERVER_NAME_HERE__'
+  server: '(?<wiki>[a-z0-9]+)\.wiki.{{ wiki_hostname }}'
   variables:
     - variable: 'wiki'
   suffix: '$wiki'
