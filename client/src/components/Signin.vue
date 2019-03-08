@@ -67,6 +67,16 @@
               </div>
             </div>
 
+            <div
+              class="field"
+              v-if="signUp"
+            >
+              <label class="label">
+                <input type="checkbox" name="corporate">
+                This is a Corporate Account
+              </label>
+            </div>
+
             <div class="field">
               <div class="control">
                 <input

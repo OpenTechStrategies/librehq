@@ -31,6 +31,20 @@
               </div>
 
               <div class="field">
+                <div class="control">
+                  <label class="label">
+                    <input
+                      type="checkbox"
+                      name="corporate"
+                      v-model="account.corporate"
+                      v-bind:id="account.corporate"
+                    >
+                    This is a Corporate Account
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
                 <label class="label">Change Password</label>
                 <div class="control has-icons-left has-icons-right">
                   <input
@@ -153,6 +167,7 @@ export default {
       account: {
         username: "",
         name: "",
+        corporate: false,
         email: ""
       }
     };

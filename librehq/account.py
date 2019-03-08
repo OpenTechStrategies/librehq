@@ -26,6 +26,7 @@ def signup():
                           #TODO: Stored as plain text!  Change before launch!
                           #See model definition as to logic
                           password=request.form["password"],
+                          corporate=request.form.get("corporate") != None,
                           email=request.form["email"])
     db.session.add(new_account)
     db.session.commit()
@@ -118,6 +119,7 @@ def account_data():
         "account": {
             "username": account.username,
             "name": account.name,
+            "corporate": account.corporate,
             "email": account.email
         }
     })
@@ -143,6 +145,7 @@ def updateAccount():
         flash("Changing username isn't supported at this time")
 
     account.name = request.form["name"]
+    account.corporate = request.form.get("corporate") != None
 
     db.session.add(account)
     db.session.commit()
@@ -182,3 +185,4 @@ class Account(db.Model):
     email = db.Column(db.String(128))
     validated = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(128))
+    corporate = db.Column(db.Boolean, default = False)
