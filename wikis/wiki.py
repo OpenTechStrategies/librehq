@@ -23,9 +23,7 @@ def create_wiki():
         'ansible-playbook',
         'wikis/ansible/mediawiki-add-wiki.yml',
         '-e', 'wiki_name=' + request.form["name"],
-        '-e', 'wiki_db=' + wiki_db_name,
-        '-e', 'wiki_username=' + session.get("account_username"),
-        '-e', 'wiki_password=' + session.get("account_password")
+        '-e', 'wiki_db=' + wiki_db_name
     ])
 
 @bp.route('')
@@ -115,9 +113,9 @@ def create_with_csv():
 
     # Override config options with our known parameters
     config["wiki_url"] = "http://" + wikiname + "." + current_app.config.get("WIKI_URL")
-    # These are set in the addWiki.sh script, and should come from user federation later
-    config["username"] = session.get("account_username")
-    config["password"] = session.get("account_password")
+    # These are set in the addWiki.sh script
+    config["username"] = "librehq_control"
+    config["password"] = current_app.config.get("MW_CONTROL_USER_PW")
 
     csv_in = csv2wiki.CSVInput(StringIO(request.files["csv"].read().decode('utf-8')), config)
     output = StringIO()
