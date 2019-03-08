@@ -46,12 +46,22 @@ def signin():
         session['account_id'] = account.id
         session['account_username'] = account.username
         session['account_password'] = account.password
-    return(redirect("/"))
+    resp = redirect("/")
+    resp.set_cookie(
+            key = 'librehq_user',
+            value = session.get('account_username'),
+            domain = request.headers['Host'])
+    return resp
 
 @bp.route('/signout')
 def signout():
     session.clear()
-    return(redirect("/"))
+    resp = redirect("/")
+    resp.set_cookie(
+            key = 'librehq_user',
+            expires = 0,
+            domain = request.headers['Host'])
+    return resp
 
 @bp.route('/activate')
 def activate():
