@@ -1,23 +1,17 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 flask = "*"
-"csv2wiki" = {git = "https://github.com/OpenTechStrategies/csv2wiki", editable = true, ref = "af3b784f420e395e7685b81c97349a95ea2470ff"}
+csv2wiki = {git = "https://github.com/OpenTechStrategies/csv2wiki",editable = true,ref = "af3b784f420e395e7685b81c97349a95ea2470ff"}
 flask-migrate = "*"
 "psycopg2" = "*"
 flask-mail = "*"
-
+flask-bcrypt = "*"
 
 [requires]
-
 python_version = "3.7"
 
-
 [dev-packages]
-

@@ -4,7 +4,7 @@ from flask import (
 )
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
-from librehq import db, mail, app
+from librehq import db, mail, app, bcrypt
 from sqlalchemy import or_
 import random
 
@@ -23,10 +23,9 @@ def sendValidationEmail(account):
 
 @bp.route('/signup', methods=(["POST"]))
 def signup():
+    print(bcrypt.generate_password_hash(request.form["password"]))
     new_account = Account(username=request.form["username"],
-                          #TODO: Stored as plain text!  Change before launch!
-                          #See model definition as to logic
-                          password=request.form["password"],
+                          password=bcrypt.generate_password_hash(request.form["password"]).decode('utf8'),
                           corporate=request.form.get("corporate") != None,
                           email=request.form["email"])
     db.session.add(new_account)
@@ -43,13 +42,13 @@ def signin():
 
     account = Account.query\
         .filter(or_(Account.username==username, Account.email==username))\
-        .filter(Account.password==password)\
         .filter(Account.validated==True)\
         .first()
 
     resp = redirect("/")
 
-    if account is not None:
+    if (account is not None and
+            bcrypt.check_password_hash(account.password, password)):
         session['account_id'] = account.id
         session['account_username'] = account.username
         session['account_password'] = account.password
@@ -132,12 +131,12 @@ def account_data():
 def updateAccount():
     account = Account.query.get(session.get("account_id"))
 
-    if not request.form["current_password"] == account.password:
+    if not bcrypt.check_password_hash(account.password, request.form["current_password"]):
         flash("Current password doesn't match")
         return redirect(url_for(".account"))
 
     if request.form["password"]:
-        account.password = request.form["password"]
+        account.password = bcrypt.generate_password_hash(request.form["password"]).decode('utf8'),
 
     if not account.email == request.form["email"]:
         emailUpdated = True
@@ -174,16 +173,6 @@ def deleteAccount():
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
-
-    # Right now, this is being stored as plain text!
-    # TODO: Hash this correctly
-    #
-    # Because this password is going to be used in subservices
-    # for authentication until we have correct authentication set up,
-    # we either need to query the user each time they want to do
-    # something that would pass through their password, or store it
-    # as plain text so we can reuse.  We choose the second so that
-    # while prototyping, the user experience matches the end goal.
     password = db.Column(db.String(128))
     email = db.Column(db.String(128))
     validated = db.Column(db.Boolean, default=False)
