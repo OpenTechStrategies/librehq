@@ -5,6 +5,7 @@ from flask import (
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from librehq import db, mail, app
+from sqlalchemy import or_
 import random
 
 bp = Blueprint('account', __name__, url_prefix='/')
@@ -40,9 +41,11 @@ def signin():
     username = request.form["username"]
     password = request.form["password"]
 
-    account = Account.query.filter_by(username=username,
-        password=password,
-        validated=True).first()
+    account = Account.query\
+        .filter(or_(Account.username==username, Account.email==username))\
+        .filter(Account.password==password)\
+        .filter(Account.validated==True)\
+        .first()
 
     resp = redirect("/")
 
