@@ -46,6 +46,22 @@
               </div>
 
               <div class="field">
+                <label class="label">Change Name</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input
+                    class="input"
+                    type="text"
+                    name="name"
+                    placeholder="New Name"
+                    v-bind:value="account.name"
+                  >
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="user"></font-awesome-icon>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
                 <label class="label">Change Email Address</label>
                 <div class="control has-icons-left has-icons-right">
                   <input
@@ -136,6 +152,7 @@ export default {
     return {
       account: {
         username: "",
+        name: "",
         email: ""
       }
     };

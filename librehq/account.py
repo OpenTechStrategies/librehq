@@ -117,6 +117,7 @@ def account_data():
     return jsonify({
         "account": {
             "username": account.username,
+            "name": account.name,
             "email": account.email
         }
     })
@@ -140,6 +141,8 @@ def updateAccount():
 
     if not account.username == request.form["username"]:
         flash("Changing username isn't supported at this time")
+
+    account.name = request.form["name"]
 
     db.session.add(account)
     db.session.commit()
@@ -178,3 +181,4 @@ class Account(db.Model):
     password = db.Column(db.String(128))
     email = db.Column(db.String(128))
     validated = db.Column(db.Boolean, default=False)
+    name = db.Column(db.String(128))
