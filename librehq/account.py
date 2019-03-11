@@ -170,6 +170,22 @@ def deleteAccount():
     flash("Deleting account isn't supported at this time")
     return redirect(url_for(".account"))
 
+@bp.route("/authorizedaccounts", methods=(["GET"]))
+@signin_required
+def getAuthorizedAccounts():
+    account = Account.query.get(session.get("account_id"))
+
+    accountsAsDicts = map(lambda a: {
+        "username": a.username
+    }, account.authorizedAccounts)
+
+    return jsonify(list(accountsAsDicts))
+
+authorized_account = db.Table(
+    "authorized_account",
+    db.Column("owner_id", db.Integer, db.ForeignKey("account.id")),
+    db.Column("account_id", db.Integer, db.ForeignKey("account.id")))
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
@@ -178,3 +194,10 @@ class Account(db.Model):
     validated = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(128))
     corporate = db.Column(db.Boolean, default = False)
+
+    authorizedAccounts = db.relationship(
+        'Account',
+        secondary = authorized_account,
+        primaryjoin = id == authorized_account.c.owner_id,
+        secondaryjoin = id == authorized_account.c.account_id,
+        backref = db.backref('authorizedWith'))
