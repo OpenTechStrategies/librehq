@@ -18,6 +18,26 @@
               >
                 {{ account.username }}
               </div>
+              <div>
+                <label class="label">Authorize Account</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input
+                    class="input"
+                    type="text"
+                    v-model="username"
+                    placeholder="Username or email"
+                  >
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="user"></font-awesome-icon>
+                  </span>
+                </div>
+                <input
+                  class="button is-link"
+                  type="submit"
+                  value="Invite"
+                  @click="inviteUser"
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -33,10 +53,24 @@ export default {
   name: "Dashboard",
   data() {
     return {
-      accounts: []
+      accounts: [],
+      username: ""
     };
   },
   methods: {
+    inviteUser() {
+      axios
+        .post("/addAuthorizedAccount", {
+          usernameOrEmail: this.username
+        })
+      .then(res => {
+        this.username = "";
+        this.accounts = res.data;
+      })
+      .catch(error => {
+        window.alert(error);
+      });
+    },
     getAuthorizedAccounts() {
       axios
         .get("/authorizedaccounts")

@@ -181,6 +181,37 @@ def getAuthorizedAccounts():
 
     return jsonify(list(accountsAsDicts))
 
+@bp.route("/addAuthorizedAccount", methods=(["POST"]))
+@signin_required
+def addAuthorizedAccount():
+    account = Account.query.get(session.get("account_id"))
+
+    username = request.json['usernameOrEmail']
+
+    accountToAdd = Account.query\
+        .filter(or_(Account.username==username, Account.email==username))\
+        .first()
+
+    if accountToAdd == None:
+        raise Exception("Account could not be found")
+
+    if accountToAdd in account.authorizedAccounts:
+        raise Exception("Account already authorized")
+
+    if accountToAdd == account:
+        raise Exception("Can't add own account")
+
+    account.authorizedAccounts.append(accountToAdd)
+
+    db.session.add(account)
+    db.session.commit()
+
+    accountsAsDicts = map(lambda a: {
+        "username": a.username
+    }, account.authorizedAccounts)
+
+    return jsonify(list(accountsAsDicts))
+
 authorized_account = db.Table(
     "authorized_account",
     db.Column("owner_id", db.Integer, db.ForeignKey("account.id")),
