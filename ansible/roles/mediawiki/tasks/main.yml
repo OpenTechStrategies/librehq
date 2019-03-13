@@ -133,9 +133,9 @@
     dest: "{{ mediawiki_install_directory }}/conf/farms.yml"
 
 - name: Add authuser extension configuration
-  copy:
-    src: remoteauthuserextension.php
-    dest: "{{ mediawiki_install_directory }}/conf/"
+  template:
+    src: remoteauthuserextension.php.j2
+    dest: "{{ mediawiki_install_directory }}/conf/remoteauthuserextension.php"
 
 - name: Ensure versions file exists
   copy:

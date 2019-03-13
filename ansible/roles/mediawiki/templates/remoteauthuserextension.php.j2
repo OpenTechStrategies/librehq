@@ -1,0 +1,15 @@
+<?php
+wfLoadExtension( 'Auth_remoteuser' );
+
+$wgAuthRemoteuserUserName = function() {
+  global $wgMediaWikiFarm;
+  $username = $_COOKIE["librehq_user"];
+  $wikiname = $wgMediaWikiFarm->getVariable("\$wiki");
+
+  if(
+    file_get_contents("http://{{ librehq_hostname }}/wikis/authorizeduser?username=$username&wiki=$wikiname") == "true"
+  ) {
+    return $username;
+  }
+};
+?>

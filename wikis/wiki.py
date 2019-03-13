@@ -34,6 +34,21 @@ def create_wiki():
 def dashboard():
     return render_template("wikis.html")
 
+@bp.route("/authorizeduser")
+def authorized_user():
+    username = request.args.get("username")
+    wikiname = request.args.get("wiki")
+
+    account = Account.query.filter_by(username = username).first()
+
+    authorized_usernames = [account.username for account in [*account.authorizedWith, account]]
+    accessible_wikis = Wiki.query.filter(Wiki.username.in_(authorized_usernames)).all()
+
+    if wikiname in [ w.wikiname for w in accessible_wikis ]:
+        return "true"
+    else:
+        return "false"
+
 @bp.route("/wikisdata")
 @signin_required
 def wiki_data():
