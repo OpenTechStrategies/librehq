@@ -4,7 +4,8 @@ from flask import (
 )
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
-from librehq import db, mail, app
+from librehq import db, mail, app, bcrypt
+from sqlalchemy import or_
 import random
 
 bp = Blueprint('account', __name__, url_prefix='/')
@@ -22,10 +23,10 @@ def sendValidationEmail(account):
 
 @bp.route('/signup', methods=(["POST"]))
 def signup():
+    print(bcrypt.generate_password_hash(request.form["password"]))
     new_account = Account(username=request.form["username"],
-                          #TODO: Stored as plain text!  Change before launch!
-                          #See model definition as to logic
-                          password=request.form["password"],
+                          password=bcrypt.generate_password_hash(request.form["password"]).decode('utf8'),
+                          corporate=request.form.get("corporate") != None,
                           email=request.form["email"])
     db.session.add(new_account)
     db.session.commit()
@@ -39,19 +40,34 @@ def signin():
     username = request.form["username"]
     password = request.form["password"]
 
-    account = Account.query.filter_by(username=username,
-        password=password,
-        validated=True).first()
-    if account is not None:
+    account = Account.query\
+        .filter(or_(Account.username==username, Account.email==username))\
+        .filter(Account.validated==True)\
+        .first()
+
+    resp = redirect("/")
+
+    if (account is not None and
+            bcrypt.check_password_hash(account.password, password)):
         session['account_id'] = account.id
         session['account_username'] = account.username
         session['account_password'] = account.password
-    return(redirect("/"))
+        resp.set_cookie(
+                key = 'librehq_user',
+                value = session.get('account_username'),
+                domain = request.headers['Host'])
+
+    return resp
 
 @bp.route('/signout')
 def signout():
     session.clear()
-    return(redirect("/"))
+    resp = redirect("/")
+    resp.set_cookie(
+            key = 'librehq_user',
+            expires = 0,
+            domain = request.headers['Host'])
+    return resp
 
 @bp.route('/activate')
 def activate():
@@ -104,6 +120,8 @@ def account_data():
     return jsonify({
         "account": {
             "username": account.username,
+            "name": account.name,
+            "corporate": account.corporate,
             "email": account.email
         }
     })
@@ -113,12 +131,12 @@ def account_data():
 def updateAccount():
     account = Account.query.get(session.get("account_id"))
 
-    if not request.form["current_password"] == account.password:
+    if not bcrypt.check_password_hash(account.password, request.form["current_password"]):
         flash("Current password doesn't match")
         return redirect(url_for(".account"))
 
     if request.form["password"]:
-        account.password = request.form["password"]
+        account.password = bcrypt.generate_password_hash(request.form["password"]).decode('utf8'),
 
     if not account.email == request.form["email"]:
         emailUpdated = True
@@ -127,6 +145,9 @@ def updateAccount():
 
     if not account.username == request.form["username"]:
         flash("Changing username isn't supported at this time")
+
+    account.name = request.form["name"]
+    account.corporate = request.form.get("corporate") != None
 
     db.session.add(account)
     db.session.commit()
@@ -149,19 +170,93 @@ def deleteAccount():
     flash("Deleting account isn't supported at this time")
     return redirect(url_for(".account"))
 
+@bp.route("/authorizedaccounts", methods=(["GET"]))
+@signin_required
+def getAuthorizedAccounts():
+    account = Account.query.get(session.get("account_id"))
+
+    accountsAsDicts = map(lambda a: {
+        "username": a.username
+    }, account.authorizedAccounts)
+
+    return jsonify(list(accountsAsDicts))
+
+@bp.route("/addAuthorizedAccount", methods=(["POST"]))
+@signin_required
+def addAuthorizedAccount():
+    account = Account.query.get(session.get("account_id"))
+
+    username = request.json['usernameOrEmail']
+
+    accountToAdd = Account.query\
+        .filter(or_(Account.username==username, Account.email==username))\
+        .first()
+
+    if accountToAdd == None:
+        raise Exception("Account could not be found")
+
+    if accountToAdd in account.authorizedAccounts:
+        raise Exception("Account already authorized")
+
+    if accountToAdd == account:
+        raise Exception("Can't add own account")
+
+    account.authorizedAccounts.append(accountToAdd)
+
+    db.session.add(account)
+    db.session.commit()
+
+    accountsAsDicts = map(lambda a: {
+        "username": a.username
+    }, account.authorizedAccounts)
+
+    return jsonify(list(accountsAsDicts))
+
+@bp.route("/removeAuthorizedAccount", methods=(["POST"]))
+@signin_required
+def removeAuthorizedAccount():
+    account = Account.query.get(session.get("account_id"))
+
+    username = request.json['username']
+
+    accountToRemove = Account.query\
+        .filter(Account.username==username)\
+        .first()
+
+    if accountToRemove == None:
+        raise Exception("Account could not be found")
+
+    if accountToRemove not in account.authorizedAccounts:
+        raise Exception("Account not yet authorized")
+
+    account.authorizedAccounts.remove(accountToRemove)
+
+    db.session.add(account)
+    db.session.commit()
+
+    accountsAsDicts = map(lambda a: {
+        "username": a.username
+    }, account.authorizedAccounts)
+
+    return jsonify(list(accountsAsDicts))
+
+authorized_account = db.Table(
+    "authorized_account",
+    db.Column("owner_id", db.Integer, db.ForeignKey("account.id")),
+    db.Column("account_id", db.Integer, db.ForeignKey("account.id")))
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
-
-    # Right now, this is being stored as plain text!
-    # TODO: Hash this correctly
-    #
-    # Because this password is going to be used in subservices
-    # for authentication until we have correct authentication set up,
-    # we either need to query the user each time they want to do
-    # something that would pass through their password, or store it
-    # as plain text so we can reuse.  We choose the second so that
-    # while prototyping, the user experience matches the end goal.
     password = db.Column(db.String(128))
     email = db.Column(db.String(128))
     validated = db.Column(db.Boolean, default=False)
+    name = db.Column(db.String(128))
+    corporate = db.Column(db.Boolean, default = False)
+
+    authorizedAccounts = db.relationship(
+        'Account',
+        secondary = authorized_account,
+        primaryjoin = id == authorized_account.c.owner_id,
+        secondaryjoin = id == authorized_account.c.account_id,
+        backref = db.backref('authorizedWith'))

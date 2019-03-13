@@ -31,6 +31,20 @@
               </div>
 
               <div class="field">
+                <div class="control">
+                  <label class="label">
+                    <input
+                      type="checkbox"
+                      name="corporate"
+                      v-model="account.corporate"
+                      v-bind:id="account.corporate"
+                    >
+                    This is a Corporate Account
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
                 <label class="label">Change Password</label>
                 <div class="control has-icons-left has-icons-right">
                   <input
@@ -41,6 +55,22 @@
                   >
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="key"></font-awesome-icon>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Change Name</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input
+                    class="input"
+                    type="text"
+                    name="name"
+                    placeholder="New Name"
+                    v-bind:value="account.name"
+                  >
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="user"></font-awesome-icon>
                   </span>
                 </div>
               </div>
@@ -136,6 +166,8 @@ export default {
     return {
       account: {
         username: "",
+        name: "",
+        corporate: false,
         email: ""
       }
     };

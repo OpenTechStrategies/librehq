@@ -4,8 +4,11 @@ from flask import (
 )
 
 import csv2wiki, subprocess
+import librehq
 
 from wikis import db, signin_required
+
+from librehq.account import Account
 
 bp = Blueprint('wikis', __name__, url_prefix='/wikis/', template_folder='templates')
 
@@ -23,9 +26,7 @@ def create_wiki():
         'ansible-playbook',
         'wikis/ansible/mediawiki-add-wiki.yml',
         '-e', 'wiki_name=' + request.form["name"],
-        '-e', 'wiki_db=' + wiki_db_name,
-        '-e', 'wiki_username=' + session.get("account_username"),
-        '-e', 'wiki_password=' + session.get("account_password")
+        '-e', 'wiki_db=' + wiki_db_name
     ])
 
 @bp.route('')
@@ -33,16 +34,44 @@ def create_wiki():
 def dashboard():
     return render_template("wikis.html")
 
+@bp.route("/authorizeduser")
+def authorized_user():
+    username = request.args.get("username")
+    wikiname = request.args.get("wiki")
+
+    account = Account.query.filter_by(username = username).first()
+
+    authorized_usernames = [account.username for account in [*account.authorizedWith, account]]
+    accessible_wikis = Wiki.query.filter(Wiki.username.in_(authorized_usernames)).all()
+
+    if wikiname in [ w.wikiname for w in accessible_wikis ]:
+        return "true"
+    else:
+        return "false"
+
 @bp.route("/wikisdata")
 @signin_required
 def wiki_data():
+    account = Account.query.get(session.get("account_id"))
+
+    authorized_usernames = [account.username for account in [*account.authorizedWith, account]]
+    accessible_wikis = Wiki.query.filter(Wiki.username.in_(authorized_usernames)).all()
+    accessible_wikis_data = [ {
+            "wikiname": w.wikiname,
+            "url": "http://" + w.wikiname + "." + current_app.config.get("WIKI_URL")
+        } for w in accessible_wikis ]
+
     wikis = Wiki.query.filter_by(username=session.get("account_username")).all()
     wikisdata = map(lambda w: {
         "wikiname": w.wikiname,
         "id": w.id,
         "url": "http://" + w.wikiname + "." + current_app.config.get("WIKI_URL")
     }, wikis)
-    return jsonify(list(wikisdata))
+    return\
+        jsonify({
+            "accessible_wikis": list(accessible_wikis_data),
+            "mywikis": list(wikisdata)
+        })
 
 @bp.route('createwiki', methods=(["POST"]))
 @signin_required
@@ -115,9 +144,9 @@ def create_with_csv():
 
     # Override config options with our known parameters
     config["wiki_url"] = "http://" + wikiname + "." + current_app.config.get("WIKI_URL")
-    # These are set in the addWiki.sh script, and should come from user federation later
-    config["username"] = session.get("account_username")
-    config["password"] = session.get("account_password")
+    # These are set in the addWiki.sh script
+    config["username"] = "librehq_control"
+    config["password"] = current_app.config.get("MW_CONTROL_USER_PW")
 
     csv_in = csv2wiki.CSVInput(StringIO(request.files["csv"].read().decode('utf-8')), config)
     output = StringIO()

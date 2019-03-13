@@ -7,6 +7,19 @@
     </section>
     <section class="section">
       <div class="container">
+        <h2 class="title">Accessible Wikis</h2>
+        <ul>
+          <li v-for="wiki of accessible_wikis">
+            <a
+              v-bind:href="wiki.url"
+            >{{wiki.wikiname}}</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <h2 class="title">My Wikis</h2>
         <div class="columns">
           <div
             class="column is-4"
@@ -186,6 +199,7 @@ export default {
   data() {
     return {
       wikis: [],
+      accessible_wikis: [],
       createWikiFromCsv: false
     };
   },
@@ -197,7 +211,8 @@ export default {
       axios
         .get("/wikis/wikisdata")
         .then(res => {
-          this.wikis = res.data;
+          this.accessible_wikis = res.data.accessible_wikis;
+          this.wikis = res.data.mywikis;
           this.wikis.forEach(wiki => Vue.set(wiki, 'createWikiFromCsv', false));
         })
         .catch(error => {
