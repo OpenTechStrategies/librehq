@@ -8,15 +8,35 @@ your changes.
 
 # Setting up your system
 
+## Installing ansible
+
+You can most likely just use the ansible provided by your distro:
+
+```ShellSession
+ $ sudo apt-get install ansible
+```
+
 ## Setting up your hosts file
 
-The easiest way to set up the hosts file is by modifying `/etc/ansible/hosts`
-You'll need two groups, one for mediawiki and one for LibreHQ.  This is so you
+The easiest way to create a local ansible hosts file, by using one of the templates
+in the current directory.  You can make this global by copying to `/etc/ansible/hosts`
+
+```
+$ cp hosts.localhost.tmpl hosts
+```
+
+or, if you'd prefer to use a different machine / user:
+```
+$ cp hosts.rempte.tmpl hosts
+$ edit hosts
+```
+
+You'll see two groups, one for mediawiki and one for LibreHQ.  This is so you
 can provision the two parts of the system on different machines if you like.
 
 You may have as many hosts as you like within the groups.  You should have
 SSH access to those hosts with your current user, either via keys or ssh-agent.
-You can test the connection to them with `ansible mediawiki -u root -m ping`.
+You can test the connection to them with `ansible -i hosts mediawiki -m ping`.
 You should see something like the following for each host in your `[mediawiki]`
 group:
 
@@ -30,31 +50,6 @@ example.com | SUCCESS => {
 You also need to have sudo access for those users.  You can either update the
 sudoers file to not need a password, or use `--ask-become-pass` when running the
 ansible-playbook command.
-
-### Sample hosts file for localhost
-
-This a simple hosts file that you can install in `/etc/ansible/hosts` to install
-the entire LibreHQ locally, using the current user:
-
-```
-[mediawiki]
-localhost
-
-[librehq]
-localhost
-```
-
-### Sample hosts file for different user on different machines
-
-```
-[mediawiki]
-wiki.librehq.com
-remote_user=<username>
-
-[librehq]
-librehq.com
-remote_user=<username>
-```
 
 ## Setting up needed variables
 
@@ -80,7 +75,7 @@ unlocked.
 The one liner to run the playbook:
 
 ```ShellSesssion
- $ ansible-playbook all.yml
+ $ ansible-playbook -i hosts all.yml
 ```
 
 # Useful tools for running in development
