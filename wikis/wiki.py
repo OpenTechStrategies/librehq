@@ -4,8 +4,11 @@ from flask import (
 )
 
 import csv2wiki, subprocess
+import librehq
 
 from wikis import db, signin_required
+
+from librehq.account import Account
 
 bp = Blueprint('wikis', __name__, url_prefix='/wikis/', template_folder='templates')
 
@@ -34,13 +37,26 @@ def dashboard():
 @bp.route("/wikisdata")
 @signin_required
 def wiki_data():
+    account = Account.query.get(session.get("account_id"))
+
+    authorized_usernames = [account.username for account in [*account.authorizedWith, account]]
+    accessible_wikis = Wiki.query.filter(Wiki.username.in_(authorized_usernames)).all()
+    accessible_wikis_data = [ {
+            "wikiname": w.wikiname,
+            "url": "http://" + w.wikiname + "." + current_app.config.get("WIKI_URL")
+        } for w in accessible_wikis ]
+
     wikis = Wiki.query.filter_by(username=session.get("account_username")).all()
     wikisdata = map(lambda w: {
         "wikiname": w.wikiname,
         "id": w.id,
         "url": "http://" + w.wikiname + "." + current_app.config.get("WIKI_URL")
     }, wikis)
-    return jsonify(list(wikisdata))
+    return\
+        jsonify({
+            "accessible_wikis": list(accessible_wikis_data),
+            "mywikis": list(wikisdata)
+        })
 
 @bp.route('createwiki', methods=(["POST"]))
 @signin_required
