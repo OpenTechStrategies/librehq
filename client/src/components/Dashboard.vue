@@ -17,6 +17,12 @@
                 v-for="account of accounts"
               >
                 {{ account.username }}
+                <input
+                  class="button is-danger"
+                  type="submit"
+                  @click="removeAccount(account.username)"
+                  value="Remove"
+                >
               </div>
               <div>
                 <label class="label">Authorize Account</label>
@@ -35,7 +41,7 @@
                   class="button is-link"
                   type="submit"
                   value="Invite"
-                  @click="inviteUser"
+                  @click="inviteAccount"
                 >
               </div>
             </div>
@@ -58,7 +64,7 @@ export default {
     };
   },
   methods: {
-    inviteUser() {
+    inviteAccount() {
       axios
         .post("/addAuthorizedAccount", {
           usernameOrEmail: this.username
@@ -70,6 +76,21 @@ export default {
       .catch(error => {
         window.alert(error);
       });
+    },
+    removeAccount(username) {
+      if(confirm("Remove " + username + " from authorized list?")) {
+        axios
+          .post("/removeAuthorizedAccount", {
+            username: username
+          })
+        .then(res => {
+          this.username = "";
+          this.accounts = res.data;
+        })
+        .catch(error => {
+          window.alert(error);
+        });
+      }
     },
     getAuthorizedAccounts() {
       axios

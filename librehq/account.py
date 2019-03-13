@@ -212,6 +212,34 @@ def addAuthorizedAccount():
 
     return jsonify(list(accountsAsDicts))
 
+@bp.route("/removeAuthorizedAccount", methods=(["POST"]))
+@signin_required
+def removeAuthorizedAccount():
+    account = Account.query.get(session.get("account_id"))
+
+    username = request.json['username']
+
+    accountToRemove = Account.query\
+        .filter(Account.username==username)\
+        .first()
+
+    if accountToRemove == None:
+        raise Exception("Account could not be found")
+
+    if accountToRemove not in account.authorizedAccounts:
+        raise Exception("Account not yet authorized")
+
+    account.authorizedAccounts.remove(accountToRemove)
+
+    db.session.add(account)
+    db.session.commit()
+
+    accountsAsDicts = map(lambda a: {
+        "username": a.username
+    }, account.authorizedAccounts)
+
+    return jsonify(list(accountsAsDicts))
+
 authorized_account = db.Table(
     "authorized_account",
     db.Column("owner_id", db.Integer, db.ForeignKey("account.id")),
