@@ -42,15 +42,18 @@ def signin():
     account = Account.query.filter_by(username=username,
         password=password,
         validated=True).first()
+
+    resp = redirect("/")
+
     if account is not None:
         session['account_id'] = account.id
         session['account_username'] = account.username
         session['account_password'] = account.password
-    resp = redirect("/")
-    resp.set_cookie(
-            key = 'librehq_user',
-            value = session.get('account_username'),
-            domain = request.headers['Host'])
+        resp.set_cookie(
+                key = 'librehq_user',
+                value = session.get('account_username'),
+                domain = request.headers['Host'])
+
     return resp
 
 @bp.route('/signout')
