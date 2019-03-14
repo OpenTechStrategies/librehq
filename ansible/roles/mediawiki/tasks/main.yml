@@ -2,7 +2,7 @@
 - name: Add php repository
   become: true
   apt_repository:
-    repo: ppa:ondrej/php
+    repo: packages.sury.org/php
 
 - name: install prerequisites
   become: true

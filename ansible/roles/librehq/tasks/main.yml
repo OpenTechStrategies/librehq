@@ -19,6 +19,7 @@
   git:
     dest: "{{ librehq_directory }}"
     repo: https://github.com/OpenTechStrategies/librehq
+    force: yes
 
     #- name: Update pip
     #  become: true
