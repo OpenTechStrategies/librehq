@@ -13,19 +13,6 @@
   - name: Include variables for add script
     include_vars: mediawiki_vars/vars.yml
 
-  - name: Create database
-    become: true
-    mysql_db:
-      name: "{{ wiki_db }}"
-
-  - name: Add database priveleges
-    become: true
-    mysql_user:
-      name: wikiuser
-      state: present
-      append_privs: true
-      priv: "{{ wiki_db }}.*:ALL"
-
   # Initialize wikis
   - name: Create wiki
     command: "php {{ mediawiki_install_directory }}/mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbpass=\"{{ wikiuser_db_password }}\" --dbname={{ wiki_db }} --lang=en --pass=\"{{ librehq_control_password }}\" \"{{ wiki_name }}\" \"librehq_control\""

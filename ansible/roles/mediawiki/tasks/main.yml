@@ -75,7 +75,7 @@
     name: wikiuser
     password: "{{ wikiuser_db_password }}"
     state: present
-    priv: "*.*:USAGE"
+    priv: "*.*:ALL"
 
 - name: Enable PHP modules
   become: true
