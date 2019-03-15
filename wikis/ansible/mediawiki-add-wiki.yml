@@ -28,7 +28,7 @@
 
   # Initialize wikis
   - name: Create wiki
-    command: "php {{ mediawiki_install_directory }}/mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbpass=\"{{ wikiuser_db_pass }}\" --dbname={{ wiki_db }} --lang=en --pass=\"{{ wikiuser_db_pass}}\" \"{{ wiki_name }}\" \"librehq_control\""
+    command: "php {{ mediawiki_install_directory }}/mediawiki-1.31.1/maintenance/install.php --confpath=/dev/null --dbtype=mysql --dbserver=localhost --dbuser=wikiuser --dbpass=\"{{ wikiuser_db_password }}\" --dbname={{ wiki_db }} --lang=en --pass=\"{{ librehq_control_password }}\" \"{{ wiki_name }}\" \"librehq_control\""
 
   - name: Add wikifarm config file
     template:

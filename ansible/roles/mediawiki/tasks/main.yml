@@ -54,7 +54,7 @@
   become: true
   mysql_user:
     name: wikiuser
-    password: "{{ wikiuser_db_pass }}"
+    password: "{{ wikiuser_db_password }}"
     state: present
     priv: "*.*:USAGE"
 
