@@ -25,6 +25,7 @@ def create_wiki():
     subprocess.call([
         'ansible-playbook',
         'wikis/ansible/mediawiki-add-wiki.yml',
+        '-i', 'wikis/ansible/mwiki_hosts',
         '-e', 'wiki_name=' + request.form["name"],
         '-e', 'wiki_db=' + wiki_db_name
     ])
@@ -97,6 +98,7 @@ def delete_wiki():
     subprocess.call([
         'ansible-playbook',
         'wikis/ansible/mediawiki-delete-wiki.yml',
+        '-i', 'wikis/ansible/mwiki_hosts',
         '-e', 'wiki_name=' + wiki.wikiname,
         '-e', 'wiki_db=' + wiki_db_name
     ])
@@ -117,6 +119,7 @@ def rename_wiki():
     subprocess.call([
         'ansible-playbook',
         'wikis/ansible/mediawiki-rename-wiki.yml',
+        '-i', 'wikis/ansible/mwiki_hosts',
         '-e', 'wiki_name_old=' + old_wiki_name,
         '-e', 'wiki_name_new=' + new_wiki_name
     ])

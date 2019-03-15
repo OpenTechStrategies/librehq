@@ -70,6 +70,17 @@ doesn't have the ability to unlock vaults, and the design decisions around that
 have not been made.  For now, while running in prototype mode, secrets stay
 unlocked.
 
+## Setting up the mediawiki hosts file
+
+When adding, removing, or renaming a wiki, librehq runs ansible scripts.  This
+requires the user running librehq to be able to execute ssh commands on the
+machine running mediawiki, as well as to be properly configured.
+
+```ShellSesssion
+ $ cp roles/librehq/files/mwiki-hosts.tmpl roles/mediawiki/files/mwiki-hosts
+ # Edit roles/mediawiki/files/mwiki-hosts
+```
+
 # Running the playbook
 
 The one liner to run the playbook:

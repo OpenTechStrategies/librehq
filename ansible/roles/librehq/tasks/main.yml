@@ -102,6 +102,11 @@
     src: mwiki_vars.yml.j2
     dest: "{{ librehq_directory }}/wikis/ansible/mediawiki_vars/vars.yml"
 
+- name: Copy mediawiki ansible host configuration
+  copy:
+    src: mwiki_hosts
+    dest: "{{ librehq_directory }}/wikis/ansible/mwiki_hosts"
+
 - name: Send up Apache LibreHQ config file
   become: true
   template:
