@@ -89,6 +89,26 @@ The one liner to run the playbook:
  $ ansible-playbook -i hosts all.yml
 ```
 
+# Starting the services
+
+## Flask server
+
+Once installed, the flask server needs to be running.  From the librehq
+installation directory:
+
+```ShellSesssion
+ $ FLASK_APP=librehq FLASK_DEBUG=1 pipenv run flask run
+```
+
+## Mail server
+
+The easiest way to mock out email working is to run a local smtp server
+that just dumps to stdout:
+
+```ShellSesssion
+ $ python -m smtpd -n -c DebuggingServer localhost:1025
+```
+
 # Useful tools for running in development
 
 ## Apache
