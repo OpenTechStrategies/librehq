@@ -10,9 +10,10 @@
     include_vars: mediawiki_vars/vars.yml
 
   - name: Drop database
-    become: true
     mysql_db:
       name: "{{ wiki_db }}"
+      login_user: wikiuser
+      login_password: "{{ wikiuser_db_password }}"
       state: absent
 
   - name: Remove wikifarm config file

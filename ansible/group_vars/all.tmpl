@@ -1,19 +1,20 @@
 ---
-
-# The source directory is specified because you may
-# already have it checked out if using development
+# Ansible will check out librehq to this directory
+# If you already have it checked out, set it to this directroy
 librehq_directory: __YOUR_SRC_DIR_HERE__
 
 # When we get to production, we will need to either use
 # ansible vaults, or just override on the command line
 # when provisioning.
+#
+# For testing, just use whatever
 db_password: __YOUR_DB_PW_HERE__
 
 # This hostname is something that your machine can find
 # via dns for wiki population when using a wiki prefix.
 #  <wikiname>.wiki.<hostname>
 #
-# For instance, if your wiki hostname was librehq-wikis.com,
+# For instance, if your wiki_hostname was librehq-wikis.com,
 # your machine would need to find test.wiki.librehq-wikis.com
 wiki_hostname: __YOUR_WIKI_HOSTNAME_HERE__
 
@@ -25,11 +26,9 @@ librehq_hostname: __YOUR_LIBREHQ_HOSTNAME_HERE__
 # This must be an absolute path because of weirdness with unarchive
 mediawiki_install_directory: __ABSOLUTE_INSTALLATION_DIRECTORY__
 
-# The password for the wikiuser user for mysql.  This needs
-# to be propogated into the wikis submodule so that wikis
-# can be added/removed.  See installation instructions
-# for more information
-#
-# This is also used for the librehq control user bot for
-# running automated commands (csv2wiki, setup, etc)
-wikiuser_db_pass: __MEDIAWIKI_MYSQL_DB_PASS__
+# The password for the wikiuser user for mysql.
+wikiuser_db_password: __MEDIAWIKI_MYSQL_DB_PASS__
+
+# The password for the mediawiki user librehq_control to run automated
+# commands against wikis (such as csv2wiki, setup, etc)
+librehq_control_password: __LIBREHQ_CONTROL_PASSWORD__

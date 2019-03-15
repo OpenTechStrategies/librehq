@@ -1,8 +1,27 @@
 ---
-- name: Add php repository
+
+- name: Add php key - Debian
+  become: true
+  apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    state: present
+  when: ansible_distribution == "Debian"
+
+- name: Add php reposotory - Debian
+  become: true
+  apt_repository:
+    # We hardcode the distrobution here because for some reason
+    # ansible's ansible_distribution_release wasn't working
+    repo: "deb https://packages.sury.org/php/ buster main"
+    state: present
+  register: php_ondrej_debian_repo
+  when: ansible_distribution == "Debian"
+
+- name: Add php repository - Ubuntu
   become: true
   apt_repository:
     repo: ppa:ondrej/php
+  when: ansible_distribution == 'Ubuntu'
 
 - name: install prerequisites
   become: true
@@ -54,9 +73,9 @@
   become: true
   mysql_user:
     name: wikiuser
-    password: "{{ wikiuser_db_pass }}"
+    password: "{{ wikiuser_db_password }}"
     state: present
-    priv: "*.*:USAGE"
+    priv: "*.*:ALL"
 
 - name: Enable PHP modules
   become: true
