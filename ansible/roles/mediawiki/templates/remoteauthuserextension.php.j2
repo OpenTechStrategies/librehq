@@ -1,15 +1,33 @@
 <?php
 wfLoadExtension( 'Auth_remoteuser' );
 
+use Hooks;
+
 $wgAuthRemoteuserUserName = function() {
   global $wgMediaWikiFarm;
   $username = $_COOKIE["librehq_user"];
   $wikiname = $wgMediaWikiFarm->getVariable("\$wiki");
 
-  if(
-    file_get_contents("http://{{ librehq_hostname }}/wikis/authorizeduser?username=$username&wiki=$wikiname") == "true"
-  ) {
+  $authorized = file_get_contents("http://{{ librehq_hostname }}/wikis/authorizeduser?username=$username&wiki=$wikiname") == "true";
+
+  Hooks::register('PersonalUrls', function( &$personalurls ) use ($authorized) {
+    if(!$authorized) {
+      $personalurls['login'] = [
+        'href' => 'http://{{ librehq_hostname }}',
+        'text' => 'Log in to LibreHQ'
+      ];
+
+      unset($personalurls['createaccount']);
+    }
+  });
+
+  if($authorized) {
     return $username;
   }
 };
+
+$wgAuthRemoteuserUserUrls = [
+  'logout' => 'http://{{ librehq_hostname }}/signout'
+];
+
 ?>
