@@ -91,43 +91,10 @@ The one liner to run the playbook:
 
 # Starting the services
 
-## Flask server
-
-Once installed, the flask server needs to be running.  From the librehq
-installation directory:
-
-```ShellSesssion
- $ FLASK_APP=librehq FLASK_DEBUG=1 pipenv run flask run
-```
-
-## Mail server
-
-The easiest way to mock out email working is to run a local smtp server
-that just dumps to stdout:
-
-```ShellSesssion
- $ python -m smtpd -n -c DebuggingServer localhost:1025
-```
+Refer to the README.md in the project root for starting all the services
+once installed.
 
 # Useful tools for running in development
-
-## Apache
-
-By default, mediawiki has some changes to the apache the farm is installed on,
-but librehq can just be accessed via localhost:5000.  However, if you want to
-host somewhere else and not open up that port to the world, the following apache
-site config can be useful:
-
-```
-<VirtualHost *:80>
-  ProxyPreserveHost On
-  ProxyPass /client/ http://127.0.0.1:8080/client/
-  ProxyPassReverse /client/ http://127.0.0.1:8080/client/
-  ProxyPass / http://127.0.0.1:5000/
-  ProxyPassReverse / http://127.0.0.1:5000/
-  ServerName __YOUR_SERVER_NAME_HERE__
-</VirtualHost>
-```
 
 ## dnsmasq
 

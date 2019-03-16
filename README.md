@@ -37,11 +37,23 @@ running may result in errors.
 
 ## Using the application
 
-At this time, the application runs locally on port 5000, so visit
-`http://localhost:5000` to view.  If you have installed from ansible,
-and are just using the app without development, you can stop here.
+Part of the ansible setup is to install apache files with port forwarding.
+While you can probably access the application via `http://localhost:5000`,
+make sure to test by using `http://__YOUR_LIBREHQ_HOSTNAME__`.
+
+The reason for this is that the other services not part of core librehq will
+use that address, meaning it's useful error prevention to ensure that it's
+all set up and working correctly.
+
+## Test csv2wiki data
+
+There are files in testdata that you can use to populate a wiki using the
+csv2wiki tool via the interface (Populate wiki with csv data).
 
 # Extra tasks
+
+If you have installed from ansible, and are just using the app without
+development, you can stop here.
 
 For developers that may need to update the database, regenerate the html/js
 files, and do active work on the site, more information and useful commands
