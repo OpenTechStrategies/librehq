@@ -42,6 +42,9 @@ def authorized_user():
 
     account = Account.query.filter_by(username = username).first()
 
+    if account is None:
+        return "false"
+
     authorized_usernames = [account.username for account in [*account.authorizedWith, account]]
     accessible_wikis = Wiki.query.filter(Wiki.username.in_(authorized_usernames)).all()
 
