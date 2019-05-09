@@ -59,6 +59,13 @@ example, these are three distinct wikis:
 * `https://librehq.com/USER_1/wiki/WIKINAME_2`
 * `https://librehq.com/USER_2/wiki/WIKINAME_1`
 
+TODO: The above is no longer accurate.  The [INSTALL.md](INSTALL.md)
+file gives some more up-to-date information, and once things are no
+longer in flux we should update this document too.  Basically, we're
+going with user-specific hostnames in order to support service
+sharding as we scale.  This [blog post about S3 from Amazon](https://aws.amazon.com/blogs/aws/amazon-s3-path-deprecation-plan-the-rest-of-the-story/)
+explains the reasoning very well.
+
 As a general rule, every component of a URL should be meaningful,
 human-readable, and (when it's under our control) short.  We can't do
 anything about the "https://" part, but we can try to adhere to this
