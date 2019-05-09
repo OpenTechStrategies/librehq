@@ -27,7 +27,7 @@ $ cp hosts.localhost.tmpl hosts
 
 or, if you'd prefer to use a different machine / user:
 ```
-$ cp hosts.rempte.tmpl hosts
+$ cp hosts.remote.tmpl hosts
 $ edit hosts
 ```
 
