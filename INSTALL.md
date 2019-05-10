@@ -13,9 +13,10 @@ We cover three installation scenarios:
   for pre-production testing.  For this, we recommend the
   [production-deployment](#production-deployment).
 
-In the first two of these cases, there's some custom DNS setup you
-need to do, covered below in [DNS setup](#dns-setup).  In the dev
-setup case, there's also some Apache proxying setup, covered
+In the first two of these cases, there are some custom DNS
+arrangements you need to make, covered below
+in [DNS setup](#dns-setup).  In the dev deployment case, there's also
+some [Apache proxying setup](#apache-httpd-config) needed.
 
 ## DNS setup
 
